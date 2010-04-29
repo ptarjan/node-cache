@@ -1,6 +1,6 @@
-# node.js-cache
+# node-cache
 
-A simple in-memory cache.
+A simple in-memory cache for node.js
 
 ## Installation
 
