@@ -31,9 +31,39 @@ which should print
     Houdini will now disapear
     Houdini is null
 
+## API
+
+### put = function(key, value, time)
+
+* Simply stores a value. 
+* If time isn't passed in, it is stored forever.
+* Will actually remove the value in the specified time (via `setTimeout`)
+
+### get = function(key)
+
+* Retreives a value for a given key
+
+### del = function(key)
+
+* Deletes a key
+
+### size = function()
+
+* Returns the current number of entries in the cache
+
+### memsize = function()
+
+* Returns the number of entries taking up space in the cache
+* Will usually `== size()` unless a `setTimeout` removal went wrong
+
+### debug = function(bool)
+
+* Turns on or off debugging
+
 ## TODO
 
 * Namespaces
+* A way of walking the cache for diagnostic purposes
 
 ## Note on Patches/Pull Requests
  
