@@ -18,6 +18,11 @@ sys.puts('true == '+cache.get(complicated));
 cache.del(complicated);
 sys.puts('null == '+cache.get(complicated));
 
+sys.puts('1 == '+cache.size());
+cache.put(0, 0);
+sys.puts('2 == '+cache.size());
+cache.del(0);
+
 setTimeout(function() {
   sys.puts('b == '+cache.get('a'));
 }, 2000);

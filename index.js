@@ -38,7 +38,7 @@ exports.size = function() {
   var size = 0, key;
   for (key in cache) {
     if (cache.hasOwnProperty(key)) 
-      if (exports.get(key))
+      if (exports.get(key) !== null)
         size++;
   }
   return size;
