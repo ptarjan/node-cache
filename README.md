@@ -60,6 +60,14 @@ which should print
 
 * Turns on or off debugging
 
+### hits = function()
+
+* Returns the number of cache hits
+
+### misses = function()
+
+* Returns the number of cache misses.
+
 ## TODO
 
 * Namespaces
