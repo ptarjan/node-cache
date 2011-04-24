@@ -2,7 +2,7 @@ var cache = require('./index')
     sys = require('sys')
 ;
 
-cache.debug = true;
+cache.debug(false);
 
 sys.puts('null == '+cache.get('a'));
 sys.puts('0 == '+cache.size());
@@ -32,3 +32,7 @@ setTimeout(function() {
   sys.puts('0 == '+cache.size());
 }, 4000);
   
+setTimeout(function() {
+	sys.puts('Cache hits: ' + cache.hits());
+	sys.puts('Cache misses: ' + cache.misses());	
+}, 5000);

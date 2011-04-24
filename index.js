@@ -27,11 +27,11 @@ exports.get = function(key) {
   var data = cache[key];
   if (typeof data != "undefined") {
     if (isNaN(data.expire) || data.expire >= now()) {
-	  hitCount++;
+	  if (debug) hitCount++;
       return data.value;
     } else {
       // free some space
-      missCount++;
+      if (debug) missCount++;
       exports.del(key);
     }
   }
