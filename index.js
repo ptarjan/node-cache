@@ -3,6 +3,8 @@ var sys = require('sys');
 var cache = {}
 function now() { return (new Date).getTime(); }
 var debug = false;
+var hitCount = 0;
+var missCount = 0;
 
 exports.put = function(key, value, time) {
   if (debug) sys.puts('caching: '+key+' = '+value+' (@'+time+')');
@@ -25,9 +27,11 @@ exports.get = function(key) {
   var data = cache[key];
   if (typeof data != "undefined") {
     if (isNaN(data.expire) || data.expire >= now()) {
+	  if (debug) hitCount++;
       return data.value;
     } else {
       // free some space
+      if (debug) missCount++;
       exports.del(key);
     }
   }
@@ -55,4 +59,12 @@ exports.memsize = function() {
 
 exports.debug = function(bool) {
   debug = bool;
+}
+
+exports.hits = function() {
+	return hitCount;
+}
+
+exports.misses = function() {
+	return missCount;
 }
