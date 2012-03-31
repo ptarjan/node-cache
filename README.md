@@ -4,32 +4,32 @@ A simple in-memory cache for node.js
 
 ## Installation
 
-  npm install memory-cache
+    npm install memory-cache
 
 ## Usage
 
-  var cache = require('memory-cache')
-    , sys   = require('sys')
+    var cache = require('memory-cache')
+      , sys   = require('sys')
 
-  // now just use the cache
+    // now just use the cache
 
-  cache.put('foo', 'bar');
-  sys.puts(cache.get('foo'))
+    cache.put('foo', 'bar');
+    sys.puts(cache.get('foo'))
 
-  // that wasn't too interesting, here's the good part
+    // that wasn't too interesting, here's the good part
 
-  cache.put('houdini', 'disapear', 100) // Time in ms
-  sys.puts('Houdini will now ' + cache.get('houdini'));
+    cache.put('houdini', 'disapear', 100) // Time in ms
+    sys.puts('Houdini will now ' + cache.get('houdini'));
 
-  setTimeout(function() {
-    sys.puts('Houdini is ' + cache.get('houdini'));
-  }, 200);
+    setTimeout(function() {
+      sys.puts('Houdini is ' + cache.get('houdini'));
+    }, 200);
 
 which should print
 
-  bar
-  Houdini will now disapear
-  Houdini is null
+    bar
+    Houdini will now disapear
+    Houdini is null
 
 ## API
 
