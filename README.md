@@ -8,21 +8,20 @@ A simple in-memory cache for node.js
 
 ## Usage
 
-    var cache = require('memory-cache')
-      , sys   = require('sys')
+    var cache = require('memory-cache');
 
     // now just use the cache
 
     cache.put('foo', 'bar');
-    sys.puts(cache.get('foo'))
+    console.log(cache.get('foo'))
 
     // that wasn't too interesting, here's the good part
 
     cache.put('houdini', 'disapear', 100) // Time in ms
-    sys.puts('Houdini will now ' + cache.get('houdini'));
+    console.log('Houdini will now ' + cache.get('houdini'));
 
     setTimeout(function() {
-      sys.puts('Houdini is ' + cache.get('houdini'));
+      console.log('Houdini is ' + cache.get('houdini'));
     }, 200);
 
 which should print
