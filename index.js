@@ -1,5 +1,3 @@
-var sys = require('sys');
-
 var cache = {}
 function now() { return (new Date).getTime(); }
 var debug = false;
@@ -7,7 +5,7 @@ var hitCount = 0;
 var missCount = 0;
 
 exports.put = function(key, value, time) {
-  if (debug) sys.puts('caching: '+key+' = '+value+' (@'+time+')');
+  if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
   var expire = time + now();
   cache[key] = {value: value, expire: expire}
 
