@@ -15,7 +15,7 @@ exports.put = function(key, value, time) {
   if (!isNaN(expire)) {
     setTimeout(function() {
       exports.del(key);
-    }, expire);
+    }, time);
   }
 }
 
