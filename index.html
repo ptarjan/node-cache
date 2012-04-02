@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Node-cache by ptarjan</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Node-cache</h1>
+<p>A simple in-memory cache for nodejs (or node.js or node, or whatever you call it)</p>
+        <p class="view"><a href="https://github.com/ptarjan/node-cache">View the Project on GitHub <small>ptarjan/node-cache</small></a></p>
+        <ul>
+          <li><a href="https://github.com/ptarjan/node-cache/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/ptarjan/node-cache/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/ptarjan/node-cache">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>node-cache</h1>
+
+<p>A simple in-memory cache for node.js</p>
+
+<h2>Installation</h2>
+
+<pre><code>npm install memory-cache
+</code></pre>
+
+<h2>Usage</h2>
+
+<pre><code>var cache = require('memory-cache');
+
+// now just use the cache
+
+cache.put('foo', 'bar');
+console.log(cache.get('foo'))
+
+// that wasn't too interesting, here's the good part
+
+cache.put('houdini', 'disapear', 100) // Time in ms
+console.log('Houdini will now ' + cache.get('houdini'));
+
+setTimeout(function() {
+  console.log('Houdini is ' + cache.get('houdini'));
+}, 200);
+</code></pre>
+
+<p>which should print</p>
+
+<pre><code>bar
+Houdini will now disapear
+Houdini is null
+</code></pre>
+
+<h2>API</h2>
+
+<h3>put = function(key, value, time)</h3>
+
+<ul>
+<li>Simply stores a value. </li>
+<li>If time isn't passed in, it is stored forever.</li>
+<li>Will actually remove the value in the specified time (via <code>setTimeout</code>)</li>
+</ul><h3>get = function(key)</h3>
+
+<ul>
+<li>Retreives a value for a given key</li>
+</ul><h3>del = function(key)</h3>
+
+<ul>
+<li>Deletes a key</li>
+</ul><h3>size = function()</h3>
+
+<ul>
+<li>Returns the current number of entries in the cache</li>
+</ul><h3>memsize = function()</h3>
+
+<ul>
+<li>Returns the number of entries taking up space in the cache</li>
+<li>Will usually <code>== size()</code> unless a <code>setTimeout</code> removal went wrong</li>
+</ul><h3>debug = function(bool)</h3>
+
+<ul>
+<li>Turns on or off debugging</li>
+</ul><h3>hits = function()</h3>
+
+<ul>
+<li>Returns the number of cache hits</li>
+</ul><h3>misses = function()</h3>
+
+<ul>
+<li>Returns the number of cache misses.</li>
+</ul><h2>TODO</h2>
+
+<ul>
+<li>Namespaces</li>
+<li>A way of walking the cache for diagnostic purposes</li>
+</ul><h2>Note on Patches/Pull Requests</h2>
+
+<ul>
+<li>Fork the project.</li>
+<li>Make your feature addition or bug fix.</li>
+<li>Send me a pull request.</li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/ptarjan">ptarjan</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
