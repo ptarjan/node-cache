@@ -30,6 +30,13 @@ setTimeout(function() {
   console.log('null == '+cache.get('a'));
   console.log('0 == '+cache.size());
 }, 4000);
+
+setTimeout(function() {
+  cache.put(complicated, true);
+  console.log('true == '+cache.get(complicated));
+  cache.flush();
+  console.log('null == '+cache.get(complicated));
+}, 4500);
   
 setTimeout(function() {
 	console.log('Cache hits: ' + cache.hits());
