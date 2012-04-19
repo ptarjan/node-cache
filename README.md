@@ -46,7 +46,7 @@ which should print
 
 * Deletes a key
 
-### flush = function()
+### clear = function()
 
 * Deletes all keys
 

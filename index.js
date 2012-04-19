@@ -21,7 +21,7 @@ exports.del = function(key) {
   delete cache[key];
 }
 
-exports.flush = function() {
+exports.clear = function() {
   cache = {};
 }
 
