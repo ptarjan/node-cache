@@ -3,6 +3,11 @@ var cache = require('./index')
 
 cache.debug(false);
 
+cache.put('a', true);
+console.log('true == '+cache.get('a'));
+cache.clear();
+console.log('null == '+cache.get('a'));
+
 console.log('null == '+cache.get('a'));
 console.log('0 == '+cache.size());
 
