@@ -46,6 +46,10 @@ which should print
 
 * Deletes a key
 
+### flush = function()
+
+* Deletes all keys
+
 ### size = function()
 
 * Returns the current number of entries in the cache
