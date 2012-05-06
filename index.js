@@ -21,6 +21,10 @@ exports.del = function(key) {
   delete cache[key];
 }
 
+exports.clear = function() {
+  cache = {};
+}
+
 exports.get = function(key) {
   var data = cache[key];
   if (typeof data != "undefined") {
