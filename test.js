@@ -40,3 +40,23 @@ setTimeout(function() {
 	console.log('Cache hits: ' + cache.hits());
 	console.log('Cache misses: ' + cache.misses());	
 }, 5000);
+
+
+cache.put('timeout', 'timeout', 2000);
+
+setTimeout(function() {
+	console.log('timeout == '+cache.get('timeout'));
+	cache.put('timeout', 'timeout-re', 2000); // Cancel timeout on NEW put
+}, 1000);
+
+setTimeout(function() {
+	console.log('timeout-re == '+cache.get('timeout'));
+},3000);
+
+
+
+
+
+
+
+

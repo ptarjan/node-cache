@@ -6,15 +6,25 @@ var missCount = 0;
 
 exports.put = function(key, value, time) {
   if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
-  var expire = time + now();
-  cache[key] = {value: value, expire: expire}
+  var oldRecord = cache[key];
+	if(oldRecord) {
+		clearTimeout(oldRecord.timeout);
+	}
 
-  // clean up space
-  if (!isNaN(expire)) {
-    setTimeout(function() {
-      exports.del(key);
-    }, time);
-  }
+	var record = {value: value, expire: expire};
+
+
+	var expire = time + now();
+	if (!isNaN(expire)) {
+
+		var timeout = setTimeout(function() {
+	    exports.del(key);
+	  }, time);
+
+		record.timeout = timeout;
+	}
+
+	cache[key] = record;
 }
 
 exports.del = function(key) {
