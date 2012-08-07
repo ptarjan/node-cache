@@ -41,7 +41,6 @@ setTimeout(function() {
 	console.log('Cache misses: ' + cache.misses());	
 }, 5000);
 
-
 cache.put('timeout', 'timeout', 2000);
 
 setTimeout(function() {
@@ -51,12 +50,4 @@ setTimeout(function() {
 
 setTimeout(function() {
 	console.log('timeout-re == '+cache.get('timeout'));
-},3000);
-
-
-
-
-
-
-
-
+}, 3000);

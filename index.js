@@ -7,20 +7,17 @@ var missCount = 0;
 exports.put = function(key, value, time) {
   if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
   var oldRecord = cache[key];
-	if(oldRecord) {
+	if (oldRecord) {
 		clearTimeout(oldRecord.timeout);
 	}
 
+	var expire = time + now();
 	var record = {value: value, expire: expire};
 
-
-	var expire = time + now();
 	if (!isNaN(expire)) {
-
 		var timeout = setTimeout(function() {
 	    exports.del(key);
 	  }, time);
-
 		record.timeout = timeout;
 	}
 
