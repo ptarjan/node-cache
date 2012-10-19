@@ -1,12 +1,14 @@
 # node-cache
 
-A simple in-memory cache for node.js
+A simple in-memory cache for node.js or the browser (<1KB minified).
 
 ## Installation
 
     npm install memory-cache
 
 ## Usage
+
+### Node
 
     var cache = require('memory-cache');
 
@@ -23,6 +25,21 @@ A simple in-memory cache for node.js
     setTimeout(function() {
       console.log('Houdini is ' + cache.get('houdini'));
     }, 200);
+
+### Browser
+
+    <script src="memory-cache.min.js"></script>
+    <script>
+       memorycache.put('foo', 'bar');
+       console.log(memorycache.get('foo'));
+
+       memorycache.put('houdini', 'disappear', 100); // Time in ms
+       console.log('Houdini will now ' + memorycache.get('houdini'));
+
+       setTImeout(function() {
+         console.log('Houdini is ' + memorycache.get('houdini'));
+       }, 200);
+    </script>
 
 which should print
 

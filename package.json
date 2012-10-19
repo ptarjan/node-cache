@@ -3,14 +3,21 @@
   "description" : "A simple in-memory cache. put() get() and delete()",
   "author" : "Paul Tarjan <npm@paulisageek.com>",
   "url" : "https://github.com/ptarjan/node-cache",
+  "contributors": [
+    {
+      "name": "Andy Burke",
+      "email": "aburke@bitflood.org",
+      "web": "https://github.com/andyburke" 
+    } 
+  ],
   "keywords" : [
     "cache",
     "ram",
     "simple",
     "storage"
   ],
-  "main" : "./index.js",
-  "version" : "0.0.4",
+  "main" : "./memory-cache.js",
+  "version" : "0.0.5",
   "repository" : { 
     "type" : "git", 
     "url" : "git://github.com/ptarjan/node-cache.git"
