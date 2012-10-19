@@ -1,4 +1,4 @@
-var cache = require('./index')
+var cache = require('./memory-cache')
 ;
 
 cache.debug(false);
