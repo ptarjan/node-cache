@@ -4,7 +4,7 @@ var debug = false;
 var hitCount = 0;
 var missCount = 0;
 
-exports.put = function(key, value, time) {
+exports.put = function(key, value, time, timeoutCallback) {
   if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
   var oldRecord = cache[key];
 	if (oldRecord) {
@@ -17,6 +17,9 @@ exports.put = function(key, value, time) {
 	if (!isNaN(expire)) {
 		var timeout = setTimeout(function() {
 	    exports.del(key);
+	    if (typeof timeoutCallback === 'function') {
+	    	timeoutCallback(key);
+	    }
 	  }, time);
 		record.timeout = timeout;
 	}
