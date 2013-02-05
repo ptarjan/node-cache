@@ -29,6 +29,10 @@ cache.put(0, 0);
 console.log('2 == '+cache.size());
 cache.del(0);
 
+cache.put('c', 'd', 1000, function() { 
+  console.log('callback was called');
+});
+
 setTimeout(function() {
   console.log('b == '+cache.get('a'));
 }, 2000);
