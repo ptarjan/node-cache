@@ -44,7 +44,7 @@ which should print
 
 ### del = function(key)
 
-* Deletes a key
+* Deletes a key, return a bool specify whether or not a key was deleted.
 
 ### clear = function()
 
