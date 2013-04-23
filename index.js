@@ -34,8 +34,12 @@ exports.put = function(key, value, time, timeoutCallback) {
 
 exports.del = function(key) {
   var oldRecord = cache[key];
+  var ret = true;
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
+    if (!isNaN(oldRecord.expire) && oldRecord.expire < now()) {
+      ret = false;
+    }
   } else {
     return false;
   }
