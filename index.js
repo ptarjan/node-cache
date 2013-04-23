@@ -28,7 +28,12 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
-  delete cache[key];
+  if(typeof(cache[key])=='undefined'){
+     return false;
+  }else{
+    delete cache[key];
+    return true;
+  }
 }
 
 exports.clear = function() {
@@ -44,7 +49,7 @@ exports.get = function(key) {
     } else {
       // free some space
       if (debug) missCount++;
-      exports.del(key);
+      delete cache[key];
     }
   }
   return null;
