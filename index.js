@@ -36,9 +36,12 @@ exports.del = function(key) {
   var oldRecord = cache[key];
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
+  } else {
+    return false;
   }
   size--;
   delete cache[key];
+  return true;
 }
 
 exports.clear = function() {
@@ -61,7 +64,7 @@ exports.get = function(key) {
     } else {
       // free some space
       if (debug) missCount++;
-      exports.del(key);
+      delete cache[key];
     }
   } else if (debug) {
     missCount++;
