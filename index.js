@@ -35,11 +35,13 @@ exports.clear = function() {
   cache = {};
 }
 
-exports.get = function(key) {
+exports.get = function(key, foundCallback, notFoundCallback) {
   var data = cache[key];
   if (typeof data != "undefined") {
     if (isNaN(data.expire) || data.expire >= now()) {
 	  if (debug) hitCount++;
+	  if (typeof foundCallback === 'function')
+	  	foundCallback(data.value);
       return data.value;
     } else {
       // free some space
@@ -47,6 +49,11 @@ exports.get = function(key) {
       exports.del(key);
     }
   }
+  if (typeof notFoundCallback === 'function')
+  	notFoundCallback(key, function(data, time) {
+  		exports.put(key, data, time);
+  		foundCallback(data);
+  	});
   return null;
 }
 
