@@ -30,7 +30,7 @@ exports.put = function(key, value, time, timeoutCallback) {
 exports.del = function(key) {
   if (typeof cache[key] === 'undefined') {
     return false;
-  } else if (  isNaN(data.expire) || data.expire >= now() ){
+  } else if (isNaN(data.expire) || data.expire >= now()){
     delete cache[key];
     return true;
   } else {
