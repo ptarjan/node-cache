@@ -28,10 +28,14 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
+  clearTimeout(cache[key].timeout);
   delete cache[key];
 }
 
 exports.clear = function() {
+  for(var key in cache) {
+    clearTimeout(cache[key].timeout);
+  }
   cache = {};
 }
 
