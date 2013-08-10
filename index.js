@@ -46,6 +46,8 @@ exports.get = function(key) {
       if (debug) missCount++;
       exports.del(key);
     }
+  } else if (debug) {
+    missCount++;
   }
   return null;
 }
