@@ -4,6 +4,11 @@ var debug = false;
 var hitCount = 0;
 var missCount = 0;
 
+exports.replace = function(key, value) {
+  var oldRecord = cache[key] || {};
+  if (debug) console.log('replacing: '+key+' = '+value+' (@'+oldRecord.timeout+')');
+	cache[key] = record;
+}
 exports.put = function(key, value, time, timeoutCallback) {
   if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
   var oldRecord = cache[key];
