@@ -33,7 +33,7 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
-  clearTimeout(cache[key].timeout);
+  if(cache[key]) clearTimeout(cache[key].timeout);
   delete cache[key];
 }
 
