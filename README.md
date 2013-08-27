@@ -1,6 +1,6 @@
 # tinycache
 
-A simple, small (~100 lines) in-memory cache for node.js or the browser (<1KB minified).
+A simple, small (~100 lines) in-memory cache for node.js or the browser (~1.5KB minified).
 
 ## Installation
 
