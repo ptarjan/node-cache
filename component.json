@@ -16,6 +16,9 @@
     "storage"
   ],
   "main" : "./tinycache.js",
+  "scripts": [
+    "./tinycache.js"
+  ],
   "version" : "0.0.6",
   "repository" : { 
     "type" : "git", 

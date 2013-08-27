@@ -1,51 +1,58 @@
-# node-cache
+# tinycache
 
-A simple in-memory cache for node.js or the browser (<1KB minified).
+A simple, small (~100 lines) in-memory cache for node.js or the browser (<1KB minified).
 
 ## Installation
 
-    npm install memory-cache
+    npm install tinycache
 
 ## Usage
 
 ### Node
 
-    var cache = require('memory-cache');
+    var TinyCache = require( 'tinycache' );
+    var cache = new TinyCache();
 
     // now just use the cache
 
-    cache.put('foo', 'bar');
-    console.log(cache.get('foo'))
+    cache.put( 'foo', 'bar' );
+    console.log( cache.get( 'foo' ) );
 
     // that wasn't too interesting, here's the good part
 
-    cache.put('houdini', 'disapear', 100) // Time in ms
-    console.log('Houdini will now ' + cache.get('houdini'));
+    cache.put( 'houdini', 'disapear', 100 ); // Time in ms
+    console.log( 'Houdini will now ' + cache.get( 'houdini' ) );
 
-    setTimeout(function() {
-      console.log('Houdini is ' + cache.get('houdini'));
-    }, 200);
+    setTimeout( function() {
+      console.log( 'Houdini is ' + cache.get( 'houdini' ) );
+    }, 200 );
+    
+    // don't want to allocate separate caches?
+    // there's also a default shared cache:
+    var sharedCache = Cache.shared;
+    sharedCache.put( 'foo', 'bar' );
+
+    // or you could grab it in a one-liner
+    var theSharedCache = require( 'tinycache' ).shared;
 
 ### Browser
 
-    <script src="memory-cache.min.js"></script>
+#### Using Component (http://component.io)
+
+    component install tinycache
+    
+    ...
+    
+    var TinyCache = require( 'tinycache' );
+    ...
+    
+#### By hand
+
+    <script src="tinycache.min.js"></script>
     <script>
-       memorycache.put('foo', 'bar');
-       console.log(memorycache.get('foo'));
-
-       memorycache.put('houdini', 'disappear', 100); // Time in ms
-       console.log('Houdini will now ' + memorycache.get('houdini'));
-
-       setTImeout(function() {
-         console.log('Houdini is ' + memorycache.get('houdini'));
-       }, 200);
+        var cache = new TinyCache();
+        cache.put( 'foo', 'bar' );
     </script>
-
-which should print
-
-    bar
-    Houdini will now disapear
-    Houdini is null
 
 ## API
 
@@ -75,10 +82,6 @@ which should print
 
 * Returns the number of entries taking up space in the cache
 * Will usually `== size()` unless a `setTimeout` removal went wrong
-
-### debug = function(bool)
-
-* Turns on or off debugging
 
 ### hits = function()
 
