@@ -26,6 +26,18 @@ cache.put(0, 0);
 console.log('2 == %s', cache.size());
 cache.del(0);
 
+cache.debug(true);
+
+var basicObject = { foo: 'b', baz: 'a', nug: 'd'};
+cache.put('obj', basicObject);
+cache.del('obj');
+
+var notObject = "bad";
+cache.put('notObj', notObject);
+cache.del('notObj');
+
+cache.debug(false);
+
 setTimeout(function() {
   console.log('b == %s', cache.get('a'));
 }, 2000);
