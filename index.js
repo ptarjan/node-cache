@@ -6,7 +6,9 @@ var missCount = 0;
 var size = 0;
 
 exports.put = function(key, value, time, timeoutCallback) {
-  if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
+  if (debug) {
+    console.log('caching: %s = %j (@%s)', key, value, time);
+  }
   var oldRecord = cache[key];
 	if (oldRecord) {
 		clearTimeout(oldRecord.timeout);

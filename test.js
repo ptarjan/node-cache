@@ -33,6 +33,18 @@ cache.put('c', 'd', 1000, function() {
   console.log('callback was called');
 });
 
+cache.debug(true);
+
+var basicObject = { foo: 'b', baz: 'a', nug: 'd'};
+cache.put('obj', basicObject);
+cache.del('obj');
+
+var notObject = "bad";
+cache.put('notObj', notObject);
+cache.del('notObj');
+
+cache.debug(false);
+
 setTimeout(function() {
   console.log('b == '+cache.get('a'));
 }, 2000);
