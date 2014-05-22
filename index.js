@@ -31,15 +31,21 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
-  size--;
   var oldRecord = cache[key];
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
   }
+  size--;
   delete cache[key];
 }
 
 exports.clear = function() {
+  for (var key in cache) {
+    var oldRecord = cache[key];
+    if (oldRecord) {
+      clearTimeout(oldRecord.timeout);
+    }
+  }
   size = 0;
   cache = {};
 }
