@@ -14,5 +14,8 @@
   "repository" : { 
     "type" : "git", 
     "url" : "git://github.com/ptarjan/node-cache.git"
+  },
+  "scripts" : {
+    "test" : "node test.js"
   }
 }
