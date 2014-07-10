@@ -73,7 +73,7 @@ which should print
 
 * Returns the number of cache misses.
 
-### keys = fuction()
+### keys = function()
 
 * Returns all the cache keys
 
