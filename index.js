@@ -28,10 +28,20 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
+  var oldRecord = cache[key];
+  if (oldRecord) {
+    clearTimeout(oldRecord.timeout);
+  }
   delete cache[key];
 }
 
 exports.clear = function() {
+  for(var key in cache){
+	var oldRecord = cache[key];
+  	if (oldRecord) {
+    		clearTimeout(oldRecord.timeout);
+  	}
+  }
   cache = {};
 }
 
