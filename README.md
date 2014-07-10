@@ -73,6 +73,10 @@ which should print
 
 * Returns the number of cache misses.
 
+### keys = function()
+
+* Returns all the cache keys
+
 ## TODO
 
 * Namespaces
