@@ -52,20 +52,20 @@ exports.get = function(key) {
   return null;
 }
 
-exports.size = function() { 
+exports.size = function() {
   var size = 0, key;
   for (key in cache) {
-    if (cache.hasOwnProperty(key)) 
+    if (cache.hasOwnProperty(key))
       if (exports.get(key) !== null)
         size++;
   }
   return size;
 }
 
-exports.memsize = function() { 
+exports.memsize = function() {
   var size = 0, key;
   for (key in cache) {
-    if (cache.hasOwnProperty(key)) 
+    if (cache.hasOwnProperty(key))
       size++;
   }
   return size;
@@ -82,3 +82,7 @@ exports.hits = function() {
 exports.misses = function() {
 	return missCount;
 }
+
+exports.keys = function() {
+  return Object.keys(cache);
+};
