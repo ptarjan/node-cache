@@ -4,6 +4,12 @@ var debug = false;
 var hitCount = 0;
 var missCount = 0;
 
+exports.replace = function(key, value) {
+  var oldRecord = cache[key] || {};
+  if (debug) console.log('replacing: '+key+' = '+value+' (@'+oldRecord.timeout+')');
+  oldRecord.value = value;
+	cache[key] = oldRecord;
+}
 exports.put = function(key, value, time, timeoutCallback) {
   if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
   var oldRecord = cache[key];
@@ -28,10 +34,14 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
+  if(cache[key]) clearTimeout(cache[key].timeout);
   delete cache[key];
 }
 
 exports.clear = function() {
+  for(var key in cache) {
+    clearTimeout(cache[key].timeout);
+  }
   cache = {};
 }
 
