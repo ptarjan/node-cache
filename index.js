@@ -32,6 +32,10 @@ exports.put = function(key, value, time, timeoutCallback) {
 
 exports.del = function(key) {
   size--;
+  var oldRecord = cache[key];
+  if (oldRecord) {
+    clearTimeout(oldRecord.timeout);
+  }
   delete cache[key];
 }
 

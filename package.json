@@ -1,8 +1,14 @@
 {
   "name" : "memory-cache",
-  "description" : "A simple in-memory cache. put() get() and delete()",
+  "description" : "A simple in-memory cache. put() get() and del()",
   "author" : "Paul Tarjan <npm@paulisageek.com>",
-  "url" : "https://github.com/ptarjan/node-cache",
+  "contributors": [
+    {
+      "name": "Ramon Snir",
+      "email": "ramon@dynamicyield.com"
+    }
+  ],
+  "url" : "https://github.com/ramonsnir/node-cache",
   "keywords" : [
     "cache",
     "ram",
