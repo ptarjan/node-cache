@@ -60,7 +60,7 @@ exports.get = function (key, def, args, timeout, TOcb) {
         } else {
             res = def;
         }
-        exports.put(key, def, timeout, TOcb);
+        exports.put(key, res, timeout, TOcb);
         return res || null;
     } else {
         return data;
