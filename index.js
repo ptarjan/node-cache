@@ -35,21 +35,33 @@ exports.clear = function() {
   cache = {};
 }
 
-exports.get = function(key) {
-  var data = cache[key];
-  if (typeof data != "undefined") {
-    if (isNaN(data.expire) || data.expire >= now()) {
-	  if (debug) hitCount++;
-      return data.value;
-    } else {
-      // free some space
-      if (debug) missCount++;
-      exports.del(key);
+exports.__get = function (key) {
+    var data = cache[key];
+    if (typeof data != "undefined") {
+        if (isNaN(data.expire) || data.expire >= now()) {
+            if (debug) hitCount++;
+            return data.value;
+        } else {
+            if (debug) missCount++;
+            exports.del(key);
+        }
+    } else if (debug) {
+        missCount++;
     }
-  } else if (debug) {
-    missCount++;
-  }
-  return null;
+    return null;
+}
+
+exports.get = function (key, def, args) {
+    var data = exports.__get(key);
+    if (data === null) {
+        if (typeof def == "function") {
+            return def(args);
+        } else {
+            return def || null;
+        }
+    } else {
+        return data;
+    }
 }
 
 exports.size = function() {
