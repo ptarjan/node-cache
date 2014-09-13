@@ -51,14 +51,17 @@ exports.__get = function (key) {
     return null;
 }
 
-exports.get = function (key, def, args) {
+exports.get = function (key, def, args, timeout, TOcb) {
     var data = exports.__get(key);
     if (data === null) {
+        var res = null;
         if (typeof def == "function") {
-            return def(args);
+            res = def(args);
         } else {
-            return def || null;
+            res = def;
         }
+        exports.put(key, def, timeout, TOcb);
+        return res || null;
     } else {
         return data;
     }
