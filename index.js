@@ -52,6 +52,40 @@ exports.get = function(key) {
   return null;
 }
 
+
+exports.fetch = function(key, time, timeoutCallback) {
+  function setFromCallback(callback) {
+    this._from_callback = callback;
+    return this;
+  }
+
+  function setThenCallback(callback) {
+    this._then_callback = callback;
+
+    value = exports.get(this.key, this.time, this.timeoutCallback)
+
+    if (value === null || typeof value === "undefined")
+      this._from_callback(this); //Otherwise, node-cache expects the caller to resolve
+    else
+      this.resolve(value, true); //If value is present, node-cache resolves and force it not to cache again
+    return this;
+  }
+
+  function resolveCacheValue(value, do_not_cache) {
+    if (!do_not_cache) exports.put(this.key, value, this.time, this.timeoutCallback);
+    this._then_callback(value);
+  }
+
+  return {
+    key: key,
+    time: time,
+    timeoutCallback: timeoutCallback,
+    from: setFromCallback,
+    then: setThenCallback,
+    resolve: resolveCacheValue
+  }
+}
+
 exports.size = function() {
   var size = 0, key;
   for (key in cache) {
