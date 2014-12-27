@@ -32,11 +32,32 @@ which should print
     Houdini will now disapear
     Houdini is null
 
+You may also use the fetch-or-resolve flow with a non-blocking behavior and structure
+```javascript
+var cache = require('memory-cache');
+
+function get_username(userid, cb) {
+  cache.fetch("username_"+userid, 10000).from(function(cache) {
+    //pseudocode
+    expensive_database_access(function(err, res) {
+      cache.resolve(res.name);
+    })
+  }).then(cb);
+}
+
+get_username(123, function(name) {
+  console.log(name);
+});
+
+```
+the __from__ block will only be run if there is a cache miss. Otherwise the value will be resolved right away.
+
+
 ## API
 
 ### put = function(key, value, time)
 
-* Simply stores a value. 
+* Simply stores a value.
 * If time isn't passed in, it is stored forever.
 * Will actually remove the value in the specified time (via `setTimeout`)
 
@@ -83,7 +104,7 @@ which should print
 * A way of walking the cache for diagnostic purposes
 
 ## Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Send me a pull request.
