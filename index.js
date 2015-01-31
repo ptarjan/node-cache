@@ -1,34 +1,68 @@
 var cache = {};
+
 function now() {
     return (new Date).getTime();
 }
+
+function log(s) {
+    console.log(new Date() + s);
+}
+
 var debug = false;
 var hitCount = 0;
 var missCount = 0;
 
 exports.put = function (key, value, time, timeoutCallback) {
-    if (debug) console.log('caching: ' + key + ' = ' + value + ' (@' + time + ')');
-    var oldRecord = cache[key];
-    if (oldRecord) {
-        clearTimeout(oldRecord.timeout);
-    }
+    if (debug) log('caching: ' + key + ' = ' + value + ' (@' + time + ')');
+    exports.del(key);
 
     var expire = time + now();
-    var record = {value: value, expire: expire};
+    var record = {
+        value: value,
+        expire: expire,
+        timeout: null,
+        callback: null,
+        timeoutCallback: timeoutCallback
+    };
 
     if (!isNaN(expire)) {
-        record.timeout = setTimeout(function () {
+        record.callback = function (key) {
+            if (typeof this.timeoutCallback === 'function')
+                this.timeoutCallback(key, this.value);
             exports.del(key);
-            if (typeof timeoutCallback === 'function') {
-                timeoutCallback(key);
-            }
+        };
+        record.timeout = setTimeout(function () {
+            var record = cache[key];
+            if (record) record.callback(key);
         }, time);
     }
     cache[key] = record;
 };
 
+exports.update = function (key, value, time) {
+    var record = cache[key];
+    if (record) {
+        if (debug) log("update [" + key + "] with value: " + value + ", timeout: " + time);
+        record.value = value;
+        record.expire = time + now();
+        if (!isNaN(time)) {
+            clearTimeout(record.timeout);
+            record.timeout = setTimeout(function () {
+                var record = cache[key];
+                if (record) record.callback(key);
+            }, time);
+        }
+    } else {
+        exports.put(key, value, time);
+    }
+};
+
 exports.del = function (key) {
-    delete cache[key];
+    var record = cache[key];
+    if (record) {
+        clearTimeout(record.timeout);
+        delete cache[key];
+    }
 };
 
 exports.clear = function () {
@@ -65,8 +99,7 @@ exports.size = function () {
 exports.memsize = function () {
     var size = 0, key;
     for (key in cache) {
-        if (cache.hasOwnProperty(key))
-            size++;
+        if (cache.hasOwnProperty(key)) size++;
     }
     return size;
 };
