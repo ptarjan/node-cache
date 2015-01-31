@@ -44,6 +44,10 @@ which should print
 
 * Retreives a value for a given key
 
+### update = function(key, value, time)
+
+* Update value of _key_ , and will update callback execute time
+
 ### del = function(key)
 
 * Deletes a key
