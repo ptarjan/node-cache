@@ -77,10 +77,6 @@ which should print
 
 * Returns all the cache keys
 
-## TODO
-
-* Namespaces
-* A way of walking the cache for diagnostic purposes
 
 ## Note on Patches/Pull Requests
  
