@@ -1,5 +1,5 @@
-var cache = require('./index')
-;
+"use strict";
+var cache = require('./index');
 
 cache.debug(false);
 

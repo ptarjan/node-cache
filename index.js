@@ -1,5 +1,7 @@
-var cache = {}
-function now() { return (new Date).getTime(); }
+'use strict';
+
+var cache = {};
+function now() { return (new Date()).getTime(); }
 var debug = false;
 var hitCount = 0;
 var missCount = 0;
@@ -30,7 +32,7 @@ exports.put = function(key, value, time, timeoutCallback) {
 	}
 
 	cache[key] = record;
-}
+};
 
 exports.del = function(key) {
   var oldRecord = cache[key];
@@ -46,7 +48,7 @@ exports.del = function(key) {
   size--;
   delete cache[key];
   return true;
-}
+};
 
 exports.clear = function() {
   for (var key in cache) {
@@ -57,7 +59,7 @@ exports.clear = function() {
   }
   size = 0;
   cache = {};
-}
+};
 
 exports.get = function(key) {
   var data = cache[key];
@@ -74,27 +76,27 @@ exports.get = function(key) {
     missCount++;
   }
   return null;
-}
+};
 
 exports.size = function() {
   return size;
-}
+};
 
 exports.memsize = function() {
   return size;
-}
+};
 
 exports.debug = function(bool) {
   debug = bool;
-}
+};
 
 exports.hits = function() {
 	return hitCount;
-}
+};
 
 exports.misses = function() {
 	return missCount;
-}
+};
 
 exports.keys = function() {
   return Object.keys(cache);
