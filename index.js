@@ -1,7 +1,10 @@
 'use strict';
 
 var cache = {};
-function now() { return (new Date()).getTime(); }
+
+function now() {
+  return (new Date()).getTime();
+}
 var debug = false;
 var hitCount = 0;
 var missCount = 0;
@@ -12,26 +15,30 @@ exports.put = function(key, value, time, timeoutCallback) {
     console.log('caching: %s = %j (@%s)', key, value, time);
   }
   var oldRecord = cache[key];
-	if (oldRecord) {
-		clearTimeout(oldRecord.timeout);
-	} else {
-	  size++;
-	}
+  if (oldRecord) {
+    clearTimeout(oldRecord.timeout);
+  }
+  else {
+    size++;
+  }
 
-	var expire = time + now();
-	var record = {value: value, expire: expire};
+  var expire = time + now();
+  var record = {
+    value: value,
+    expire: expire
+  };
 
-	if (!isNaN(expire)) {
-		var timeout = setTimeout(function() {
-	    exports.del(key);
-	    if (typeof timeoutCallback === 'function') {
-	    	timeoutCallback(key);
-	    }
-	  }, time);
-		record.timeout = timeout;
-	}
+  if (!isNaN(expire)) {
+    var timeout = setTimeout(function() {
+      exports.del(key);
+      if (typeof timeoutCallback === 'function') {
+        timeoutCallback(key);
+      }
+    }, time);
+    record.timeout = timeout;
+  }
 
-	cache[key] = record;
+  cache[key] = record;
 };
 
 exports.del = function(key) {
@@ -42,7 +49,8 @@ exports.del = function(key) {
     if (!isNaN(oldRecord.expire) && oldRecord.expire < now()) {
       ret = false;
     }
-  } else {
+  }
+  else {
     return false;
   }
   size--;
@@ -65,14 +73,16 @@ exports.get = function(key) {
   var data = cache[key];
   if (typeof data != "undefined") {
     if (isNaN(data.expire) || data.expire >= now()) {
-	  if (debug) hitCount++;
+      if (debug) hitCount++;
       return data.value;
-    } else {
+    }
+    else {
       // free some space
       if (debug) missCount++;
       delete cache[key];
     }
-  } else if (debug) {
+  }
+  else if (debug) {
     missCount++;
   }
   return null;
@@ -91,11 +101,11 @@ exports.debug = function(bool) {
 };
 
 exports.hits = function() {
-	return hitCount;
+  return hitCount;
 };
 
 exports.misses = function() {
-	return missCount;
+  return missCount;
 };
 
 exports.keys = function() {
