@@ -28,7 +28,15 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
-  delete cache[key];
+  if (typeof cache[key] === 'undefined') {
+    return false;
+  } else if (isNaN(data.expire) || data.expire >= now()){
+    delete cache[key];
+    return true;
+  } else {
+    delete cache[key];
+    return false;
+  }
 }
 
 exports.clear = function() {
@@ -44,7 +52,7 @@ exports.get = function(key) {
     } else {
       // free some space
       if (debug) missCount++;
-      exports.del(key);
+      delete cache[key];
     }
   } else if (debug) {
     missCount++;
