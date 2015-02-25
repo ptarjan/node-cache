@@ -3,12 +3,15 @@ function now() { return (new Date).getTime(); }
 var debug = false;
 var hitCount = 0;
 var missCount = 0;
+var size = 0;
 
 exports.put = function(key, value, time, timeoutCallback) {
   if (debug) console.log('caching: '+key+' = '+value+' (@'+time+')');
   var oldRecord = cache[key];
 	if (oldRecord) {
 		clearTimeout(oldRecord.timeout);
+	} else {
+	  size++;
 	}
 
 	var expire = time + now();
@@ -28,10 +31,12 @@ exports.put = function(key, value, time, timeoutCallback) {
 }
 
 exports.del = function(key) {
+  size--;
   delete cache[key];
 }
 
 exports.clear = function() {
+  size = 0;
   cache = {};
 }
 
@@ -53,21 +58,10 @@ exports.get = function(key) {
 }
 
 exports.size = function() {
-  var size = 0, key;
-  for (key in cache) {
-    if (cache.hasOwnProperty(key))
-      if (exports.get(key) !== null)
-        size++;
-  }
   return size;
 }
 
 exports.memsize = function() {
-  var size = 0, key;
-  for (key in cache) {
-    if (cache.hasOwnProperty(key))
-      size++;
-  }
   return size;
 }
 
