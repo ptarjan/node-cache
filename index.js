@@ -17,8 +17,7 @@ exports.put = function(key, value, time, timeoutCallback) {
   var oldRecord = cache[key];
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
-  }
-  else {
+  } else {
     size++;
   }
 
@@ -49,8 +48,7 @@ exports.del = function(key) {
     if (!isNaN(oldRecord.expire) && oldRecord.expire < now()) {
       ret = false;
     }
-  }
-  else {
+  } else {
     return false;
   }
   size--;
@@ -75,14 +73,12 @@ exports.get = function(key) {
     if (isNaN(data.expire) || data.expire >= now()) {
       if (debug) hitCount++;
       return data.value;
-    }
-    else {
+    } else {
       // free some space
       if (debug) missCount++;
       delete cache[key];
     }
-  }
-  else if (debug) {
+  } else if (debug) {
     missCount++;
   }
   return null;
@@ -93,7 +89,8 @@ exports.size = function() {
 };
 
 exports.memsize = function() {
-  var size = 0, key;
+  var size = 0,
+    key;
   for (key in cache) {
     if (cache.hasOwnProperty(key))
       size++;
