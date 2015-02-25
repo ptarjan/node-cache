@@ -93,6 +93,11 @@ exports.size = function() {
 };
 
 exports.memsize = function() {
+  var size = 0, key;
+  for (key in cache) {
+    if (cache.hasOwnProperty(key))
+      size++;
+  }
   return size;
 };
 
