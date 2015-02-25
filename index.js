@@ -40,21 +40,36 @@ exports.clear = function() {
   cache = {};
 }
 
-exports.get = function(key) {
-  var data = cache[key];
-  if (typeof data != "undefined") {
-    if (isNaN(data.expire) || data.expire >= now()) {
-	  if (debug) hitCount++;
-      return data.value;
-    } else {
-      // free some space
-      if (debug) missCount++;
-      exports.del(key);
+exports.__get = function (key) {
+    var data = cache[key];
+    if (typeof data != "undefined") {
+        if (isNaN(data.expire) || data.expire >= now()) {
+            if (debug) hitCount++;
+            return data.value;
+        } else {
+            if (debug) missCount++;
+            exports.del(key);
+        }
+    } else if (debug) {
+        missCount++;
     }
-  } else if (debug) {
-    missCount++;
-  }
-  return null;
+    return null;
+}
+
+exports.get = function (key, def, args, timeout, TOcb) {
+    var data = exports.__get(key);
+    if (data === null) {
+        var res = null;
+        if (typeof def == "function") {
+            res = def(args);
+        } else {
+            res = def;
+        }
+        exports.put(key, res, timeout, TOcb);
+        return res || null;
+    } else {
+        return data;
+    }
 }
 
 exports.size = function() {
