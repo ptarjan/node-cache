@@ -1,6 +1,6 @@
 {
   "name" : "memory-cache",
-  "description" : "A simple in-memory cache. put() get() and del()",
+  "description" : "A simple in-memory cache. put(), get() and del()",
   "author" : "Paul Tarjan <npm@paulisageek.com>",
   "contributors": [
     {
@@ -16,7 +16,7 @@
     "storage"
   ],
   "main" : "./index.js",
-  "version" : "0.0.5",
+  "version" : "0.1.0",
   "repository" : { 
     "type" : "git", 
     "url" : "git://github.com/ptarjan/node-cache.git"
