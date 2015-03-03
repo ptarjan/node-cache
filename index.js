@@ -76,6 +76,7 @@ exports.get = function(key) {
     } else {
       // free some space
       if (debug) missCount++;
+      size--;
       delete cache[key];
     }
   } else if (debug) {
