@@ -41,19 +41,24 @@ exports.put = function(key, value, time, timeoutCallback) {
 };
 
 exports.del = function(key) {
+  var canDelete = true;
+
   var oldRecord = cache[key];
-  var ret = true;
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
     if (!isNaN(oldRecord.expire) && oldRecord.expire < now()) {
-      ret = false;
+      canDelete = false;
     }
   } else {
-    return false;
+    canDelete = false;
   }
-  size--;
-  delete cache[key];
-  return true;
+
+  if (canDelete) {
+    size--;
+    delete cache[key];
+  }
+
+  return canDelete;
 };
 
 exports.clear = function() {
@@ -65,6 +70,10 @@ exports.clear = function() {
   }
   size = 0;
   cache = {};
+  if (debug) {
+    hitCount = 0;
+    missCount = 0;
+  }
 };
 
 exports.get = function(key) {
