@@ -41,6 +41,26 @@ describe('node-cache', function() {
       clock.tick(1);
       expect(spy).to.have.been.calledOnce.and.calledWith('key');
     });
+
+    it('should override the timeout callback on a new put() with a different timeout callback', function() {
+      var spy1 = sinon.spy();
+      var spy2 = sinon.spy();
+      cache.put('key', 'value', 1000, spy1);
+      clock.tick(999);
+      cache.put('key', 'value', 1000, spy2)
+      clock.tick(1001);
+      expect(spy1).to.not.have.been.called;
+      expect(spy2).to.have.been.calledOnce.and.calledWith('key');
+    });
+
+    it('should cancel the timeout callback on a new put() without a timeout callback', function() {
+      var spy = sinon.spy();
+      cache.put('key', 'value', 1000, spy);
+      clock.tick(999);
+      cache.put('key', 'value')
+      clock.tick(1);
+      expect(spy).to.not.have.been.called;
+    });
   });
 
   describe('del()', function() {
@@ -224,6 +244,13 @@ describe('node-cache', function() {
     it('should return the corresponding value of a key in the cache', function() {
       cache.put('key', 'value');
       expect(cache.get('key')).to.equal('value');
+    });
+
+    it('should return the latests corresponding value of a key in the cache', function() {
+      cache.put('key', 'value1');
+      cache.put('key', 'value2');
+      cache.put('key', 'value3');
+      expect(cache.get('key')).to.equal('value3');
     });
 
     it('should handle various types of cache values', function() {
