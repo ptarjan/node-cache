@@ -1,28 +1,39 @@
 {
-  "name" : "memory-cache",
-  "description" : "A simple in-memory cache. put(), get() and del()",
-  "author" : "Paul Tarjan <npm@paulisageek.com>",
+  "name": "memory-cache",
+  "description": "A simple in-memory cache. put(), get() and del()",
+  "author": "Paul Tarjan <npm@paulisageek.com>",
   "contributors": [
     {
       "name": "Ramon Snir",
       "email": "ramon@dynamicyield.com"
     }
   ],
-  "url" : "https://github.com/ramonsnir/node-cache",
-  "keywords" : [
+  "url": "https://github.com/ramonsnir/node-cache",
+  "keywords": [
     "cache",
     "ram",
     "simple",
     "storage"
   ],
-  "main" : "./index.js",
-  "version" : "0.1.1",
-  "repository" : { 
-    "type" : "git", 
-    "url" : "git://github.com/ptarjan/node-cache.git"
+  "main": "./index.js",
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ptarjan/node-cache.git"
   },
-  "scripts" : {
-    "test" : "node test.js"
+  "scripts": {
+    "test": "node test.js"
   },
-  "license" : "BSD"
+  "license": "BSD",
+  "devDependencies": {
+    "chai": "^2.2.0",
+    "gulp": "^3.8.11",
+    "gulp-exit": "0.0.2",
+    "gulp-istanbul": "^0.7.0",
+    "gulp-jshint": "^1.10.0",
+    "gulp-mocha": "^2.0.1",
+    "jshint-stylish": "^1.0.1",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.7.0"
+  }
 }
