@@ -1,10 +1,6 @@
 'use strict';
 
 var cache = {};
-
-function now() {
-  return (new Date()).getTime();
-}
 var debug = false;
 var hitCount = 0;
 var missCount = 0;
@@ -21,7 +17,7 @@ exports.put = function(key, value, time, timeoutCallback) {
     size++;
   }
 
-  var expire = time + now();
+  var expire = time + Date.now();
   var record = {
     value: value,
     expire: expire
@@ -46,7 +42,7 @@ exports.del = function(key) {
   var oldRecord = cache[key];
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
-    if (!isNaN(oldRecord.expire) && oldRecord.expire < now()) {
+    if (!isNaN(oldRecord.expire) && oldRecord.expire < Date.now()) {
       canDelete = false;
     }
   } else {
@@ -79,7 +75,7 @@ exports.clear = function() {
 exports.get = function(key) {
   var data = cache[key];
   if (typeof data != "undefined") {
-    if (isNaN(data.expire) || data.expire >= now()) {
+    if (isNaN(data.expire) || data.expire >= Date.now()) {
       if (debug) hitCount++;
       return data.value;
     } else {
