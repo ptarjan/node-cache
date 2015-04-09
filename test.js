@@ -30,7 +30,49 @@ describe('node-cache', function() {
     it('should allow adding a new item to the cache', function() {
       expect(function() {
         cache.put('key', 'value');
-      }).to.not.throw;
+      }).to.not.throw();
+    });
+
+    it('should allow adding a new item to the cache with a timeout', function() {
+      expect(function() {
+        cache.put('key', 'value', 100);
+      }).to.not.throw();
+    });
+
+    it('should allow adding a new item to the cache with a timeout callback', function() {
+      expect(function() {
+        cache.put('key', 'value', 100, function() {});
+      }).to.not.throw();
+    });
+
+    it('should throw an error given a non-numeric timeout', function() {
+      expect(function() {
+        cache.put('key', 'value', 'foo');
+      }).to.throw();
+    });
+
+    it('should throw an error given a timeout of NaN', function() {
+      expect(function() {
+        cache.put('key', 'value', NaN);
+      }).to.throw();
+    });
+
+    it('should throw an error given a timeout of 0', function() {
+      expect(function() {
+        cache.put('key', 'value', 0);
+      }).to.throw();
+    });
+
+    it('should throw an error given a negative timeout', function() {
+      expect(function() {
+        cache.put('key', 'value', -100);
+      }).to.throw();
+    });
+
+    it('should throw an error given a non-function timeout callback', function() {
+      expect(function() {
+        cache.put('key', 'value', 100, 'foo');
+      }).to.throw();
     });
 
     it('should cause the timeout callback to fire once the cache item expires', function() {
@@ -246,11 +288,20 @@ describe('node-cache', function() {
       expect(cache.get('key')).to.equal('value');
     });
 
-    it('should return the latests corresponding value of a key in the cache', function() {
+    it('should return the latest corresponding value of a key in the cache', function() {
       cache.put('key', 'value1');
       cache.put('key', 'value2');
       cache.put('key', 'value3');
       expect(cache.get('key')).to.equal('value3');
+    });
+
+    it('should handle various types of cache keys', function() {
+      var keys = [null, undefined, NaN, true, false, 0, 1, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, '', 'a', [], {}, [1, 'a', false], {a:1,b:'a',c:false}, function() {}];
+      keys.forEach(function(key, index) {
+        var value = 'value' + index;
+        cache.put(key, value);
+        expect(cache.get(key)).to.deep.equal(value);
+      });
     });
 
     it('should handle various types of cache values', function() {
@@ -316,44 +367,6 @@ describe('node-cache', function() {
       expect(cache.size()).to.equal(1);
       clock.tick(1);
       expect(cache.size()).to.equal(0);
-    });
-  });
-
-  describe('memsize()', function() {
-    before(function() {
-      cache.debug(false);
-    });
-
-    it('should return 0 given a fresh cache', function() {
-      expect(cache.memsize()).to.equal(0);
-    });
-
-    it('should return 1 after adding a single item to the cache', function() {
-      cache.put('key', 'value');
-      expect(cache.memsize()).to.equal(1);
-    });
-
-    it('should return 3 after adding three items to the cache', function() {
-      cache.put('key1', 'value1');
-      cache.put('key2', 'value2');
-      cache.put('key3', 'value3');
-      expect(cache.memsize()).to.equal(3);
-    });
-
-    it('should not multi-count duplicate items added to the cache', function() {
-      cache.put('key', 'value1');
-      expect(cache.memsize()).to.equal(1);
-      cache.put('key', 'value2');
-      expect(cache.memsize()).to.equal(1);
-    });
-
-    it('should update when a key in the cache expires', function() {
-      cache.put('key', 'value', 1000);
-      expect(cache.memsize()).to.equal(1);
-      clock.tick(999);
-      expect(cache.memsize()).to.equal(1);
-      clock.tick(1);
-      expect(cache.memsize()).to.equal(0);
     });
   });
 
