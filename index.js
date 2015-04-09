@@ -1,6 +1,6 @@
 'use strict';
 
-var cache = {};
+var cache = Object.create(null);
 var debug = false;
 var hitCount = 0;
 var missCount = 0;
@@ -65,7 +65,7 @@ exports.clear = function() {
     }
   }
   size = 0;
-  cache = {};
+  cache = Object.create(null);
   if (debug) {
     hitCount = 0;
     missCount = 0;
@@ -98,8 +98,7 @@ exports.memsize = function() {
   var size = 0,
     key;
   for (key in cache) {
-    if (cache.hasOwnProperty(key))
-      size++;
+    size++;
   }
   return size;
 };

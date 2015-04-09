@@ -6,9 +6,12 @@
     {
       "name": "Ramon Snir",
       "email": "ramon@dynamicyield.com"
+    },
+    {
+      "name": "Jacob Wenger",
+      "email": "wenger.jacob@gmail.com"
     }
   ],
-  "url": "https://github.com/ramonsnir/node-cache",
   "keywords": [
     "cache",
     "ram",
