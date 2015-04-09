@@ -279,6 +279,15 @@ describe('node-cache', function() {
       clock.tick(1000);
       expect(cache.get('key')).to.be.null;
     });
+
+    it('should return null given a key which is a property on the Object prototype', function() {
+      expect(cache.get('toString')).to.be.null;
+    });
+
+    it('should allow reading the value for a key which is a property on the Object prototype', function() {
+      cache.put('toString', 'value');
+      expect(cache.get('toString')).to.equal('value');
+    });
   });
 
   describe('size()', function() {
