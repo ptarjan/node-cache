@@ -61,6 +61,10 @@ describe('node-cache', function() {
       clock.tick(1);
       expect(spy).to.not.have.been.called;
     });
+
+    it('should return the cached value', function() {
+      expect(cache.put('key', 'value')).to.equal('value');
+    });
   });
 
   describe('del()', function() {

@@ -36,9 +36,10 @@ which should print
 
 ### put = function(key, value, time)
 
-* Simply stores a value. 
+* Simply stores a value.
 * If time isn't passed in, it is stored forever.
-* Will actually remove the value in the specified time (via `setTimeout`)
+* Will actually remove the value in the specified time (via `setTimeout`).
+* Returns the cached value.
 
 ### get = function(key)
 

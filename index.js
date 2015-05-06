@@ -34,6 +34,8 @@ exports.put = function(key, value, time, timeoutCallback) {
   }
 
   cache[key] = record;
+
+  return value;
 };
 
 exports.del = function(key) {
