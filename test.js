@@ -561,4 +561,18 @@ describe('node-cache', function() {
       expect(cache.keys()).to.deep.equal([]);
     });
   });
+
+  describe('createStore()', function() {
+    before(function() {
+      cache.debug(false);
+    });
+
+    it('it should not conflict with global store', function() {
+      var localCache = cache.createStore();
+      cache.put('test', 123);
+      localCache.put('test', 456);
+      expect(cache.get('test')).to.be.equal(123);
+      expect(localCache.get('test')).to.equal(456);
+    });
+  });
 });
