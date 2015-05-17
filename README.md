@@ -18,7 +18,7 @@ console.log(cache.get('foo'))
 
 // that wasn't too interesting, here's the good part
 
-cache.put('houdini', 'disapear', 100) // Time in ms
+cache.put('houdini', 'disappear', 100) // Time in ms
 console.log('Houdini will now ' + cache.get('houdini'));
 
 setTimeout(function() {
@@ -29,7 +29,7 @@ setTimeout(function() {
 which should print
 
     bar
-    Houdini will now disapear
+    Houdini will now disappear
     Houdini is null
 
 ## API
@@ -43,11 +43,11 @@ which should print
 
 ### get = function(key)
 
-* Retreives a value for a given key
+* Retrieves a value for a given key
 
 ### del = function(key)
 
-* Deletes a key, return a bool specify whether or not a key was deleted.
+* Deletes a key, return a bool specifying whether or not the key was deleted
 
 ### clear = function()
 
@@ -72,7 +72,7 @@ which should print
 
 ### misses = function()
 
-* Returns the number of cache misses.
+* Returns the number of cache misses
 
 ### keys = function()
 
