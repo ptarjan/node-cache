@@ -47,7 +47,7 @@ which should print
 
 ### del = function(key)
 
-* Deletes a key, return a bool specifying whether or not the key was deleted
+* Deletes a key, returns a boolean specifying whether or not the key was deleted
 
 ### clear = function()
 
@@ -80,7 +80,7 @@ which should print
 
 
 ## Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Send me a pull request.
