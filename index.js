@@ -10,6 +10,13 @@ exports.put = function(key, value, time, timeoutCallback) {
   if (debug) {
     console.log('caching: %s = %j (@%s)', key, value, time);
   }
+
+  if (typeof time !== 'undefined' && (typeof time !== 'number' || isNaN(time) || time <= 0)) {
+    throw new Error('Cache timeout must be a positive number');
+  } else if (typeof timeoutCallback !== 'undefined' && typeof timeoutCallback !== 'function') {
+    throw new Error('Cache timeout callback must be a function');
+  }
+
   var oldRecord = cache[key];
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
@@ -17,21 +24,17 @@ exports.put = function(key, value, time, timeoutCallback) {
     size++;
   }
 
-  var expire = time + Date.now();
   var record = {
     value: value,
-    expire: expire
+    expire: time + Date.now()
   };
 
-  if (!isNaN(expire)) {
-    var timeout = setTimeout(function() {
-      exports.del(key);
-      if (typeof timeoutCallback === 'function') {
-        timeoutCallback(key);
-      }
-    }, time);
-    record.timeout = timeout;
-  }
+  record.timeout = setTimeout(function() {
+    exports.del(key);
+    if (timeoutCallback) {
+      timeoutCallback(key);
+    }
+  }, time);
 
   cache[key] = record;
 
@@ -61,10 +64,7 @@ exports.del = function(key) {
 
 exports.clear = function() {
   for (var key in cache) {
-    var oldRecord = cache[key];
-    if (oldRecord) {
-      clearTimeout(oldRecord.timeout);
-    }
+    clearTimeout(cache[key].timeout);
   }
   size = 0;
   cache = Object.create(null);
