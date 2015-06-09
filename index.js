@@ -29,12 +29,14 @@ exports.put = function(key, value, time, timeoutCallback) {
     expire: time + Date.now()
   };
 
-  record.timeout = setTimeout(function() {
-    exports.del(key);
-    if (timeoutCallback) {
-      timeoutCallback(key);
-    }
-  }, time);
+  if (!isNaN(record.expire)) {
+    record.timeout = setTimeout(function() {
+      exports.del(key);
+      if (timeoutCallback) {
+        timeoutCallback(key);
+      }
+    }, time);
+  }
 
   cache[key] = record;
 

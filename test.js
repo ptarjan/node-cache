@@ -317,6 +317,12 @@ describe('node-cache', function() {
       });
     });
 
+    it('should not set a timeout given no expiration time', function() {
+      cache.put('key', 'value');
+      clock.tick(1000);
+      expect(cache.get('key')).to.equal('value');
+    });
+
     it('should return the corresponding value of a non-expired key in the cache', function() {
       cache.put('key', 'value', 1000);
       clock.tick(999);
