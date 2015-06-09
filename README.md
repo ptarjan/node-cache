@@ -36,10 +36,10 @@ which should print
 
 ### put = function(key, value, time)
 
-* Simply stores a value.
-* If time isn't passed in, it is stored forever.
-* Will actually remove the value in the specified time (via `setTimeout`).
-* Returns the cached value.
+* Simply stores a value
+* If time isn't passed in, it is stored forever
+* Will actually remove the value in the specified time (via `setTimeout`)
+* Returns the cached value
 
 ### get = function(key)
 
@@ -68,11 +68,11 @@ which should print
 
 ### hits = function()
 
-* Returns the number of cache hits
+* Returns the number of cache hits (only monitored in debug mode)
 
 ### misses = function()
 
-* Returns the number of cache misses
+* Returns the number of cache misses (only monitored in debug mode)
 
 ### keys = function()
 
