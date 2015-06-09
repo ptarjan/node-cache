@@ -32,6 +32,27 @@ which should print
     Houdini will now disappear
     Houdini is null
 
+You may also use the fetch-or-resolve flow with a non-blocking behavior and structure
+```javascript
+var cache = require('memory-cache');
+
+function get_username(userid, cb) {
+  cache.fetch("username_"+userid, 10000).from(function(cache) {
+    //pseudocode
+    expensive_database_access(function(err, res) {
+      cache.resolve(res.name);
+    })
+  }).then(cb);
+}
+
+get_username(123, function(name) {
+  console.log(name);
+});
+
+```
+the __from__ block will only be run if there is a cache miss. Otherwise the value will be resolved right away.
+
+
 ## API
 
 ### put = function(key, value, time)
