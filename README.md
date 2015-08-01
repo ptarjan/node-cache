@@ -29,6 +29,12 @@ setTimeout(function() {
 // create new cache instance
 var debug = false;
 var newCache = new cache.Cache(debug);
+
+newCache.put('foo', 'baz');
+
+setTimeout(function() {
+  console.log('foo in new cache is ' + newCache.get('foo'));
+}, 200);
 ```
 
 which should print
@@ -36,6 +42,7 @@ which should print
     bar
     Houdini will now disappear
     Houdini is null
+    foo in new cache is baz
 
 ## API
 
@@ -83,6 +90,9 @@ which should print
 
 * Returns all the cache keys
 
+### Cache = function(debug)
+
+* Cache constructor
 
 ## Note on Patches/Pull Requests
 
