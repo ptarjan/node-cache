@@ -24,6 +24,11 @@ console.log('Houdini will now ' + cache.get('houdini'));
 setTimeout(function() {
   console.log('Houdini is ' + cache.get('houdini'));
 }, 200);
+
+
+// create new cache instance
+var debug = false;
+var newCache = new cache.Cache(debug);
 ```
 
 which should print

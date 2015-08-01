@@ -5,7 +5,7 @@ var chai = require('chai'),
     expect = chai.expect,
     sinon = require('sinon'),
     sinonChai = require('sinon-chai'),
-    cache = require('./index'),
+    cache = new (require('./index').Cache)(),
     clock;
 
 chai.use(sinonChai);
@@ -99,7 +99,7 @@ describe('node-cache', function() {
       var spy = sinon.spy();
       cache.put('key', 'value', 1000, spy);
       clock.tick(999);
-      cache.put('key', 'value')
+      cache.put('key', 'value');
       clock.tick(1);
       expect(spy).to.not.have.been.called;
     });
