@@ -1,128 +1,138 @@
 'use strict';
 
-var cache = Object.create(null);
-var debug = false;
-var hitCount = 0;
-var missCount = 0;
-var size = 0;
+var Cache = (function () {
+  var cache = Object.create(null);
+  var hitCount = 0;
+  var missCount = 0;
+  var size = 0;
 
-exports.put = function(key, value, time, timeoutCallback) {
-  if (debug) {
-    console.log('caching: %s = %j (@%s)', key, value, time);
+  function Cache (debug) {
+    this._debug = debug || false;
   }
 
-  if (typeof time !== 'undefined' && (typeof time !== 'number' || isNaN(time) || time <= 0)) {
-    throw new Error('Cache timeout must be a positive number');
-  } else if (typeof timeoutCallback !== 'undefined' && typeof timeoutCallback !== 'function') {
-    throw new Error('Cache timeout callback must be a function');
-  }
+  Cache.prototype.put = function(key, value, time, timeoutCallback) {
+    if (this._debug) {
+      console.log('caching: %s = %j (@%s)', key, value, time);
+    }
 
-  var oldRecord = cache[key];
-  if (oldRecord) {
-    clearTimeout(oldRecord.timeout);
-  } else {
-    size++;
-  }
+    if (typeof time !== 'undefined' && (typeof time !== 'number' || isNaN(time) || time <= 0)) {
+      throw new Error('Cache timeout must be a positive number');
+    } else if (typeof timeoutCallback !== 'undefined' && typeof timeoutCallback !== 'function') {
+      throw new Error('Cache timeout callback must be a function');
+    }
 
-  var record = {
-    value: value,
-    expire: time + Date.now()
+    var oldRecord = cache[key];
+    if (oldRecord) {
+      clearTimeout(oldRecord.timeout);
+    } else {
+      size++;
+    }
+
+    var record = {
+      value: value,
+      expire: time + Date.now()
+    };
+
+    if (!isNaN(record.expire)) {
+      record.timeout = setTimeout(function() {
+        _del(key);
+        if (timeoutCallback) {
+          timeoutCallback(key, value);
+        }
+      }.bind(this), time);
+    }
+
+    cache[key] = record;
+
+    return value;
   };
 
-  if (!isNaN(record.expire)) {
-    record.timeout = setTimeout(function() {
-      _del(key);
-      if (timeoutCallback) {
-        timeoutCallback(key, value);
+  Cache.prototype.del = function(key) {
+    var canDelete = true;
+
+    var oldRecord = cache[key];
+    if (oldRecord) {
+      clearTimeout(oldRecord.timeout);
+      if (!isNaN(oldRecord.expire) && oldRecord.expire < Date.now()) {
+        canDelete = false;
       }
-    }, time);
-  }
-
-  cache[key] = record;
-
-  return value;
-};
-
-exports.del = function(key) {
-  var canDelete = true;
-
-  var oldRecord = cache[key];
-  if (oldRecord) {
-    clearTimeout(oldRecord.timeout);
-    if (!isNaN(oldRecord.expire) && oldRecord.expire < Date.now()) {
+    } else {
       canDelete = false;
     }
-  } else {
-    canDelete = false;
+
+    if (canDelete) {
+      _del(key);
+    }
+
+    return canDelete;
+  };
+
+  function _del(key){
+    size--;
+    delete cache[key];
   }
 
-  if (canDelete) {
-    _del(key);
-  }
-
-  return canDelete;
-};
-
-function _del(key){
-  size--;
-  delete cache[key];
-}
-
-exports.clear = function() {
+  Cache.prototype.clear = function() {
   for (var key in cache) {
     clearTimeout(cache[key].timeout);
   }
   size = 0;
   cache = Object.create(null);
-  if (debug) {
-    hitCount = 0;
-    missCount = 0;
-  }
-};
-
-exports.get = function(key) {
-  var data = cache[key];
-  if (typeof data != "undefined") {
-    if (isNaN(data.expire) || data.expire >= Date.now()) {
-      if (debug) hitCount++;
-      return data.value;
-    } else {
-      // free some space
-      if (debug) missCount++;
-      size--;
-      delete cache[key];
+    if (this._debug) {
+      hitCount = 0;
+      missCount = 0;
     }
-  } else if (debug) {
-    missCount++;
-  }
-  return null;
-};
+  };
 
-exports.size = function() {
-  return size;
-};
+  Cache.prototype.get = function(key) {
+    var data = cache[key];
+    if (typeof data != "undefined") {
+      if (isNaN(data.expire) || data.expire >= Date.now()) {
+        if (this._debug) hitCount++;
+        return data.value;
+      } else {
+        // free some space
+        if (this._debug) missCount++;
+        size--;
+        delete cache[key];
+      }
+    } else if (this._debug) {
+      missCount++;
+    }
+    return null;
+  };
 
-exports.memsize = function() {
-  var size = 0,
-    key;
-  for (key in cache) {
-    size++;
-  }
-  return size;
-};
+  Cache.prototype.size = function() {
+    return size;
+  };
 
-exports.debug = function(bool) {
-  debug = bool;
-};
+  Cache.prototype.memsize = function() {
+    var size = 0,
+      key;
+    for (key in cache) {
+      size++;
+    }
+    return size;
+  };
 
-exports.hits = function() {
-  return hitCount;
-};
+  Cache.prototype.debug = function(bool) {
+    this._debug = bool;
+  };
 
-exports.misses = function() {
-  return missCount;
-};
+  Cache.prototype.hits = function() {
+    return hitCount;
+  };
 
-exports.keys = function() {
-  return Object.keys(cache);
-};
+  Cache.prototype.misses = function() {
+    return missCount;
+  };
+
+  Cache.prototype.keys = function() {
+    return Object.keys(cache);
+  };
+
+  return Cache;
+})();
+
+module.exports = new Cache();
+module.exports.Cache = Cache;
