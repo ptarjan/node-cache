@@ -5,13 +5,13 @@ var Cache = (function () {
   var hitCount = 0;
   var missCount = 0;
   var size = 0;
+  var debug = false;
 
-  function Cache (debug) {
-    this._debug = debug || false;
+  function Cache () {
   }
 
   Cache.prototype.put = function(key, value, time, timeoutCallback) {
-    if (this._debug) {
+    if (debug) {
       console.log('caching: %s = %j (@%s)', key, value, time);
     }
 
@@ -78,7 +78,7 @@ var Cache = (function () {
   }
   size = 0;
   cache = Object.create(null);
-    if (this._debug) {
+    if (debug) {
       hitCount = 0;
       missCount = 0;
     }
@@ -88,15 +88,15 @@ var Cache = (function () {
     var data = cache[key];
     if (typeof data != "undefined") {
       if (isNaN(data.expire) || data.expire >= Date.now()) {
-        if (this._debug) hitCount++;
+        if (debug) hitCount++;
         return data.value;
       } else {
         // free some space
-        if (this._debug) missCount++;
+        if (debug) missCount++;
         size--;
         delete cache[key];
       }
-    } else if (this._debug) {
+    } else if (debug) {
       missCount++;
     }
     return null;
@@ -116,7 +116,7 @@ var Cache = (function () {
   };
 
   Cache.prototype.debug = function(bool) {
-    this._debug = bool;
+    debug = bool;
   };
 
   Cache.prototype.hits = function() {

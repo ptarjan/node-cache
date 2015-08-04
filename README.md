@@ -30,8 +30,7 @@ setTimeout(function() {
 
 
 // create new cache instance
-var debug = false;
-var newCache = new cache.Cache(debug);
+var newCache = new cache.Cache();
 
 newCache.put('foo', 'baz');
 
@@ -96,7 +95,7 @@ which should print
 
 * Returns all the cache keys
 
-### Cache = function(debug)
+### Cache = function()
 
 * Cache constructor
 
