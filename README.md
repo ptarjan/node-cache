@@ -38,7 +38,7 @@ which should print
 
 * Simply stores a value
 * If time isn't passed in, it is stored forever
-* Will actually remove the value in the specified time (via `setTimeout`)
+* Will actually remove the value in the specified time in ms (via `setTimeout`)
 * Returns the cached value
 
 ### get = function(key)
