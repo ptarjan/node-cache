@@ -44,6 +44,7 @@ which should print
 ### get = function(key)
 
 * Retrieves a value for a given key
+* If value isn't cached, returns `null`
 
 ### del = function(key)
 
