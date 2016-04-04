@@ -196,6 +196,19 @@ describe('node-cache', function() {
       clock.tick(1000);
       expect(spy).to.not.have.been.called;
     });
+    
+    it('should handle deletion of many items', function(done) {
+      clock.restore();
+      var num = 1000;
+      for(var i = 0; i < num; i++){
+        cache.put('key' + i, i, 1000);
+      }
+      expect(cache.size()).to.equal(num);
+      setTimeout(function(){
+        expect(cache.size()).to.equal(0);
+        done();
+      }, 1000);
+    });
   });
 
   describe('clear()', function() {
