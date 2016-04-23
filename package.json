@@ -18,7 +18,7 @@
     "simple",
     "storage"
   ],
-  "main": "./index.js",
+  "main": "./app.js",
   "version": "0.1.5",
   "repository": {
     "type": "git",
