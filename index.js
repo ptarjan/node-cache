@@ -5,6 +5,7 @@ var debug = false;
 var hitCount = 0;
 var missCount = 0;
 var size = 0;
+var lifeTime;
 
 exports.put = function(key, value, time, timeoutCallback) {
   if (debug) {
@@ -22,6 +23,10 @@ exports.put = function(key, value, time, timeoutCallback) {
     clearTimeout(oldRecord.timeout);
   } else {
     size++;
+  }
+
+  if (lifeTime && time === undefined) {
+    time = lifeTime;
   }
 
   var record = {
@@ -63,7 +68,7 @@ exports.del = function(key) {
   return canDelete;
 };
 
-function _del(key){
+function _del(key) {
   size--;
   delete cache[key];
 }
@@ -100,6 +105,14 @@ exports.get = function(key) {
 
 exports.size = function() {
   return size;
+};
+
+exports.life = function(ms) {
+  if (typeof ms !== 'undefined' && (typeof ms !== 'number' || isNaN(ms) || ms <= 0)) {
+    throw new Error('Cache timeout must be a positive number');
+  } else if (typeof ms === 'number') lifeTime = ms;
+
+  return lifeTime;
 };
 
 exports.memsize = function() {
