@@ -5,7 +5,7 @@ var chai = require('chai'),
     expect = chai.expect,
     sinon = require('sinon'),
     sinonChai = require('sinon-chai'),
-    cache = require('./index'),
+    cache = require('./app'),
     clock;
 
 chai.use(sinonChai);
@@ -196,7 +196,7 @@ describe('node-cache', function() {
       clock.tick(1000);
       expect(spy).to.not.have.been.called;
     });
-    
+
     it('should handle deletion of many items', function(done) {
       clock.restore();
       var num = 1000;

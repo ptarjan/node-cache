@@ -4,7 +4,9 @@ var cache = Object.create(null);
 var debug = false;
 var hitCount = 0;
 var missCount = 0;
-var size = 0;
+var lastHit = [];
+var maxSize;
+var lifeTime;
 
 exports.put = function(key, value, time, timeoutCallback) {
   if (debug) {
@@ -20,8 +22,21 @@ exports.put = function(key, value, time, timeoutCallback) {
   var oldRecord = cache[key];
   if (oldRecord) {
     clearTimeout(oldRecord.timeout);
+  }
+
+  if (lifeTime && time === undefined) {
+    time = lifeTime;
+  }
+
+  if (lastHit.indexOf(key) === -1) {
+    lastHit.push(key);
   } else {
-    size++;
+    lastHit.push(lastHit.splice(lastHit.indexOf(key), 1)[0]);
+  }
+
+  if (maxSize && lastHit.length > maxSize) {
+    clearTimeout(cache[lastHit[0]].timeout);
+    _del(lastHit[0]);
   }
 
   var record = {
@@ -63,8 +78,8 @@ exports.del = function(key) {
   return canDelete;
 };
 
-function _del(key){
-  size--;
+function _del(key) {
+  lastHit.splice(lastHit.indexOf(key), 1);
   delete cache[key];
 }
 
@@ -72,7 +87,7 @@ exports.clear = function() {
   for (var key in cache) {
     clearTimeout(cache[key].timeout);
   }
-  size = 0;
+  lastHit = [];
   cache = Object.create(null);
   if (debug) {
     hitCount = 0;
@@ -84,13 +99,13 @@ exports.get = function(key) {
   var data = cache[key];
   if (typeof data != "undefined") {
     if (isNaN(data.expire) || data.expire >= Date.now()) {
+      lastHit.push(lastHit.splice(lastHit.indexOf(key), 1)[0]);
       if (debug) hitCount++;
       return data.value;
     } else {
       // free some space
       if (debug) missCount++;
-      size--;
-      delete cache[key];
+      _del(key);
     }
   } else if (debug) {
     missCount++;
@@ -99,7 +114,27 @@ exports.get = function(key) {
 };
 
 exports.size = function() {
-  return size;
+  return lastHit.length;
+};
+
+exports.life = function(value) {
+  if (value === 0) {
+    lifeTime = undefined;
+  } else if (typeof value !== 'undefined' && (typeof value !== 'number' || isNaN(value) || value <= 0)) {
+    throw new Error('Cache timeout must be a positive number');
+  } else if (typeof value === 'number') lifeTime = value;
+
+  return lifeTime;
+};
+
+exports.maxSize = function(value) {
+  if (value === 0) {
+    maxSize = undefined;
+  } else if (typeof value !== 'undefined' && (typeof value !== 'number' || isNaN(value) || value <= 0)) {
+    throw new Error('max Size must be a positive number');
+  } else if (typeof value === 'number') maxSize = value;
+
+  return maxSize;
 };
 
 exports.memsize = function() {
