@@ -1,10 +1,10 @@
 'use strict';
 
-function cache() {
-  let cache = require('./index.js');
+function getCache() {
+  const cacheModule = require('./index.js');
   delete require.cache[require.resolve('./index.js')];
   delete require.cache[require.resolve('./app.js')];
-  return cache;
+  return cacheModule;
 }
 
-module.exports = cache();
+module.exports = getCache();
