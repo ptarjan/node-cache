@@ -17,7 +17,7 @@ var istanbul = require('gulp-istanbul');
 /****************/
 var paths = {
   js: [
-    'index.js'
+    'index.js', 'app.js'
   ],
 
   tests: [
@@ -45,7 +45,7 @@ gulp.task('test', function() {
   return gulp.src(paths.js)
     .pipe(istanbul())
     .pipe(istanbul.hookRequire())
-    .on('finish', function () {
+    .on('finish', function() {
       gulp.src(paths.tests)
         .pipe(mocha({
           reporter: 'spec',
