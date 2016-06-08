@@ -81,7 +81,7 @@ describe('node-cache', function() {
       clock.tick(999);
       expect(spy).to.not.have.been.called;
       clock.tick(1);
-      expect(spy).to.have.been.calledOnce.and.calledWith('key');
+      expect(spy).to.have.been.calledOnce.and.calledWith('key', 'value');
     });
 
     it('should override the timeout callback on a new put() with a different timeout callback', function() {
@@ -92,7 +92,7 @@ describe('node-cache', function() {
       cache.put('key', 'value', 1000, spy2)
       clock.tick(1001);
       expect(spy1).to.not.have.been.called;
-      expect(spy2).to.have.been.calledOnce.and.calledWith('key');
+      expect(spy2).to.have.been.calledOnce.and.calledWith('key', 'value');
     });
 
     it('should cancel the timeout callback on a new put() without a timeout callback', function() {

@@ -33,7 +33,7 @@ exports.put = function(key, value, time, timeoutCallback) {
     record.timeout = setTimeout(function() {
       _del(key);
       if (timeoutCallback) {
-        timeoutCallback(key);
+        timeoutCallback(key, value);
       }
     }, time);
   }

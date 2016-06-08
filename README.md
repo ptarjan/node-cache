@@ -14,15 +14,18 @@ var cache = require('memory-cache');
 // now just use the cache
 
 cache.put('foo', 'bar');
-console.log(cache.get('foo'))
+console.log(cache.get('foo'));
 
 // that wasn't too interesting, here's the good part
 
-cache.put('houdini', 'disappear', 100) // Time in ms
+cache.put('houdini', 'disappear', 100, function(key, value) {
+    console.log(key + ' did ' + value);
+}); // Time in ms
+
 console.log('Houdini will now ' + cache.get('houdini'));
 
 setTimeout(function() {
-  console.log('Houdini is ' + cache.get('houdini'));
+    console.log('Houdini is ' + cache.get('houdini'));
 }, 200);
 ```
 
@@ -30,15 +33,17 @@ which should print
 
     bar
     Houdini will now disappear
+    Houdini did disappear
     Houdini is null
 
 ## API
 
-### put = function(key, value, time)
+### put = function(key, value, time, timeoutCallback)
 
 * Simply stores a value
 * If time isn't passed in, it is stored forever
 * Will actually remove the value in the specified time in ms (via `setTimeout`)
+* timeoutCallback is optional function fired after entry has expired with key and value passed (`function(key, value) {}`)
 * Returns the cached value
 
 ### get = function(key)
