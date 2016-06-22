@@ -26,16 +26,25 @@ exports.put = function(key, value, time, timeoutCallback) {
 
   var record = {
     value: value,
-    expire: time + Date.now()
+    expire: time + Date.now(),
+    time: time
   };
 
-  if (!isNaN(record.expire)) {
-    record.timeout = setTimeout(function() {
-      _del(key);
-      if (timeoutCallback) {
-        timeoutCallback(key, value);
+  function setTimeoutForExpiry(t) {
+    setTimeout(function() {
+      if (record.expire > Date.now()) {
+        setTimeoutForExpiry(record.expire - Date.now());
+      } else {
+        _del(key);
+        if (timeoutCallback) {
+          timeoutCallback(key, value);
+        }
       }
-    }, time);
+    }, t);
+  }
+
+  if (!isNaN(record.expire)) {
+    record.timeout = setTimeoutForExpiry(time);
   }
 
   cache[key] = record;
@@ -80,11 +89,13 @@ exports.clear = function() {
   }
 };
 
-exports.get = function(key) {
+exports.get = function(key, updateExpiry) {
   var data = cache[key];
   if (typeof data != "undefined") {
     if (isNaN(data.expire) || data.expire >= Date.now()) {
       if (debug) hitCount++;
+      if (updateExpiry)
+        cache[key].expire = data.time + Date.now();
       return data.value;
     } else {
       // free some space
