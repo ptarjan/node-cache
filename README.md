@@ -46,10 +46,11 @@ which should print
 * timeoutCallback is optional function fired after entry has expired with key and value passed (`function(key, value) {}`)
 * Returns the cached value
 
-### get = function(key)
+### get = function(key, updateExpireTime)
 
 * Retrieves a value for a given key
 * If value isn't cached, returns `null`
+* Updates the time till expiry if the updateExpireTime flag is set
 
 ### del = function(key)
 
