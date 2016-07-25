@@ -4,7 +4,7 @@ A simple in-memory cache for node.js
 
 ## Installation
 
-    npm install memory-cache
+    npm install memory-cache --save
 
 ## Usage
 
