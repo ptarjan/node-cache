@@ -40,12 +40,21 @@ which should print
 
 ### put = function(key, value, time, timeoutCallback)
 
-* Simply stores a value
-* If time isn't passed in, it is stored forever. 
-* `time` is a value in milliseconds and should always be a positive numebr.
-* Will actually remove the value in the specified time in ms (via `setTimeout`)
-* timeoutCallback is optional function fired after entry has expired with key and value passed (`function(key, value) {}`)
-* Returns the cached value
+Simply stores a value. The function returns the stored value.
+
+* `key`:
+  * Key used to store the value
+* `value`:
+  * The value associated to the key
+* `time`:
+  * If time isn't passed in, it is stored forever
+  * Expressed in milliseconds
+  * The function will throw an error if `time` isn't a positive number
+  * If this value is passed, the key will actually be removed in the specified time (via `setTimeout`)
+* `timeoutCallback`:
+  * An optional function fired after entry has expired with `key` and `value` passed (`function(key, value) {}`)
+  * If this parameter is not of type `function`, the function will throw an error
+
 
 ### get = function(key)
 
