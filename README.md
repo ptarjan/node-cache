@@ -41,7 +41,8 @@ which should print
 ### put = function(key, value, time, timeoutCallback)
 
 * Simply stores a value
-* If time isn't passed in, it is stored forever
+* If time isn't passed in, it is stored forever. 
+* `time` is a value in milliseconds and should always be a positive numebr.
 * Will actually remove the value in the specified time in ms (via `setTimeout`)
 * timeoutCallback is optional function fired after entry has expired with key and value passed (`function(key, value) {}`)
 * Returns the cached value
