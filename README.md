@@ -33,7 +33,7 @@ which should print
 
     bar
     Houdini will now disappear
-    Houdini did disappear
+    houdini did disappear
     Houdini is null
 
 ## API
