@@ -11,7 +11,7 @@ exports.put = function(key, value, time, timeoutCallback) {
     console.log('caching: %s = %j (@%s)', key, value, time);
   }
 
-  if (typeof time !== 'undefined' && (typeof time !== 'number' || isNaN(time) || time <= 0)) {
+  if (typeof time !== 'undefined' && (typeof time !== 'number' || isNaN(time) || time < 0)) {
     throw new Error('Cache timeout must be a positive number');
   } else if (typeof timeoutCallback !== 'undefined' && typeof timeoutCallback !== 'function') {
     throw new Error('Cache timeout callback must be a function');
