@@ -57,12 +57,6 @@ describe('node-cache', function() {
       }).to.throw();
     });
 
-    it('should throw an error given a timeout of 0', function() {
-      expect(function() {
-        cache.put('key', 'value', 0);
-      }).to.throw();
-    });
-
     it('should throw an error given a negative timeout', function() {
       expect(function() {
         cache.put('key', 'value', -100);
