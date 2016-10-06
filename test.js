@@ -22,6 +22,38 @@ describe('node-cache', function() {
     clock.restore();
   });
 
+  describe('limit()', function() {
+    before(function() {
+      cache.debug(false);
+    });
+
+    after(function() {
+      cache.limit(0);
+      cache.clear();
+    });
+
+    it('should set limit option if argmuent passed and return the value if not', function() {
+      cache.limit(2);
+      expect(cache.limit()).to.equal(2);
+    });
+
+    it('should remove old items if new limit value is below cache size', function() {
+      cache.clear();
+      cache.limit(0);
+      cache.put('key', 'value');
+      cache.put('key2', 'value2');
+      cache.put('key3', 'value3');
+      cache.put('key4', 'value4');
+      expect(cache.size()).to.equal(4);
+      cache.limit(2);
+      expect(cache.size()).to.equal(2);
+      expect(cache.get('key')).to.be.null;
+      expect(cache.get('key2')).to.be.null;
+      expect(cache.get('key3')).to.equal('value3');
+      expect(cache.get('key4')).to.equal('value4');
+    });
+  });
+
   describe('put()', function() {
     before(function() {
       cache.debug(false);
@@ -106,6 +138,20 @@ describe('node-cache', function() {
 
     it('should return the cached value', function() {
       expect(cache.put('key', 'value')).to.equal('value');
+    });
+
+    it('should remove old items when limit exceeded', function() {
+      cache.clear();
+      cache.limit(2);
+      cache.put('key', 'value');
+      cache.put('key2', 'value2');
+      expect(cache.size()).to.equal(2);
+      cache.put('key3', 'value3');
+      expect(cache.size()).to.equal(2);
+      expect(cache.get('key')).to.be.null;
+      expect(cache.get('key2')).to.equal('value2');
+      expect(cache.get('key3')).to.equal('value3');
+      cache.limit(0);
     });
   });
 
@@ -196,7 +242,7 @@ describe('node-cache', function() {
       clock.tick(1000);
       expect(spy).to.not.have.been.called;
     });
-    
+
     it('should handle deletion of many items', function(done) {
       clock.restore();
       var num = 1000;
