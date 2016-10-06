@@ -5,6 +5,8 @@ var debug = false;
 var hitCount = 0;
 var missCount = 0;
 var size = 0;
+var limit = null;
+var keysArray = [];
 
 exports.put = function(key, value, time, timeoutCallback) {
   if (debug) {
@@ -39,9 +41,17 @@ exports.put = function(key, value, time, timeoutCallback) {
   }
 
   cache[key] = record;
+  keysArray.push(key);
+  removeOutOfLimit();
 
   return value;
 };
+
+function removeOutOfLimit() {
+  while (limit && (size > limit)) {
+	_del(keysArray[0]);
+  }
+}
 
 exports.del = function(key) {
   var canDelete = true;
@@ -63,8 +73,20 @@ exports.del = function(key) {
   return canDelete;
 };
 
+exports.limit = function(value) {
+  if (value === undefined) {
+    return limit;
+  }
+  var numValue = Number(value);
+  limit = numValue > 0 ? numValue : null;
+  removeOutOfLimit();
+}
+
 function _del(key){
   size--;
+  keysArray = keysArray.filter(function(keyItem) {
+    return keyItem !== key;
+  });
   delete cache[key];
 }
 
@@ -74,6 +96,7 @@ exports.clear = function() {
   }
   size = 0;
   cache = Object.create(null);
+  keysArray = [];
   if (debug) {
     hitCount = 0;
     missCount = 0;
