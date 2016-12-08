@@ -26,7 +26,8 @@ exports.put = function(key, value, time, timeoutCallback) {
 
   var record = {
     value: value,
-    expire: time + Date.now()
+    expire: time + Date.now(),
+    time: time
   };
 
   if (!isNaN(record.expire)) {
@@ -80,11 +81,13 @@ exports.clear = function() {
   }
 };
 
-exports.get = function(key) {
+exports.get = function(key, updateExpireTime) {
   var data = cache[key];
   if (typeof data != "undefined") {
     if (isNaN(data.expire) || data.expire >= Date.now()) {
       if (debug) hitCount++;
+      if (updateExpireTime)
+        exports.put(key, data.value, data.time);
       return data.value;
     } else {
       // free some space
