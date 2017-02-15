@@ -127,6 +127,47 @@ function Cache () {
   this.keys = function() {
     return Object.keys(_cache);
   };
+
+  this.exportJson = function() {
+    var plainJsCache = {};
+
+    // Discard the `timeout` property.
+    // Note: JSON doesn't support `NaN`, so convert it to `'NaN'`.
+    for (var key in _cache) {
+      var record = _cache[key];
+      plainJsCache[key] = {
+        value: record.value,
+        expire: record.expire || 'NaN',
+      };
+    }
+
+    return JSON.stringify(plainJsCache);
+  };
+
+  this.importJson = function(jsonToImport) {
+    var cacheToImport = JSON.parse(jsonToImport);
+    var currTime = Date.now();
+
+    for (var key in cacheToImport) {
+      if (cacheToImport.hasOwnProperty(key)) {
+        var record = cacheToImport[key];
+
+        // This could possibly be `'NaN'` if there's no expiry set.
+        var remainingTime = record.expire - currTime;
+
+        if (remainingTime <= 0) {
+          // Delete any record that might exist with the same key.
+          this.del(key);
+          continue;
+        }
+
+        // Remaining time is either positive, or `'NaN'`.
+        this.put(key, record.value, remainingTime > 0 ? remainingTime : undefined);
+      }
+    }
+
+    return this.size();
+  };
 }
 
 module.exports = new Cache();

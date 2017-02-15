@@ -637,6 +637,163 @@ describe('node-cache', function() {
     });
   });
 
+  describe('export()', function() {
+    var START_TIME = 10000;
+
+    var BASIC_EXPORT = JSON.stringify({
+      key: {
+        value: 'value',
+        expire: START_TIME + 1000,
+      },
+    });
+
+    before(function() {
+      cache.debug(false);
+    });
+
+    beforeEach(function() {
+      clock.tick(START_TIME);
+    });
+
+    it('should return an empty object given an empty cache', function() {
+      expect(cache.exportJson()).to.equal(JSON.stringify({}));
+    });
+
+    it('should return a single record after adding a single item to the cache', function() {
+      cache.put('key', 'value', 1000);
+      expect(cache.exportJson()).to.equal(BASIC_EXPORT);
+    });
+
+    it('should return multiple records with expiry', function() {
+      cache.put('key1', 'value1');
+      cache.put('key2', 'value2', 1000);
+      expect(cache.exportJson()).to.equal(JSON.stringify({
+        key1: {
+          value: 'value1',
+          expire: 'NaN',
+        },
+        key2: {
+          value: 'value2',
+          expire: START_TIME + 1000,
+        },
+      }));
+    });
+
+    it('should update when a key in the cache expires', function() {
+      cache.put('key', 'value', 1000);
+      expect(cache.exportJson()).to.equal(BASIC_EXPORT);
+      clock.tick(999);
+      expect(cache.exportJson()).to.equal(BASIC_EXPORT);
+      clock.tick(1);
+      expect(cache.exportJson()).to.equal(JSON.stringify({}));
+    });
+  });
+
+  describe('import()', function() {
+    var START_TIME = 10000;
+
+    var BASIC_EXPORT = JSON.stringify({
+      key: {
+        value: 'value',
+        expire: START_TIME + 1000,
+      },
+    });
+
+    before(function() {
+      cache.debug(false);
+    });
+
+    beforeEach(function() {
+      clock.tick(START_TIME);
+    });
+
+    it('should import an empty object into an empty cache', function() {
+      var exportedJson = cache.exportJson();
+
+      cache.clear();
+      cache.importJson(exportedJson);
+
+      expect(cache.exportJson()).to.equal(JSON.stringify({}));
+    });
+
+    it('should import records into an empty cache', function() {
+      cache.put('key1', 'value1');
+      cache.put('key2', 'value2', 1000);
+      var exportedJson = cache.exportJson();
+
+      cache.clear();
+      cache.importJson(exportedJson);
+
+      expect(cache.exportJson()).to.equal(JSON.stringify({
+        key1: {
+          value: 'value1',
+          expire: 'NaN',
+        },
+        key2: {
+          value: 'value2',
+          expire: START_TIME + 1000,
+        },
+      }));
+    });
+
+    it('should import records into an already-existing cache', function() {
+      cache.put('key1', 'value1');
+      cache.put('key2', 'value2', 1000);
+      var exportedJson = cache.exportJson();
+
+      cache.put('key1', 'changed value', 5000);
+      cache.put('key3', 'value3', 500);
+
+      cache.importJson(exportedJson);
+
+      expect(cache.exportJson()).to.equal(JSON.stringify({
+        key1: {
+          value: 'value1',
+          expire: 'NaN',
+        },
+        key2: {
+          value: 'value2',
+          expire: START_TIME + 1000,
+        },
+        key3: {
+          value: 'value3',
+          expire: START_TIME + 500,
+        },
+      }));
+    });
+
+    it('should import with updated expire times', function() {
+      cache.put('key1', 'value1', 500);
+      cache.put('key2', 'value2', 1000);
+      var exportedJson = cache.exportJson();
+
+      var tickAmount = 750;
+      clock.tick(tickAmount);
+
+      cache.importJson(exportedJson);
+
+      expect(cache.exportJson()).to.equal(JSON.stringify({
+        key2: {
+          value: 'value2',
+          expire: START_TIME + tickAmount + 250,
+        },
+      }));
+    });
+
+    it('should return the new size', function() {
+      cache.put('key1', 'value1', 500);
+      var exportedJson = cache.exportJson();
+
+      cache.clear();
+      cache.put('key2', 'value2', 1000);
+      expect(cache.size()).to.equal(1);
+
+      var size = cache.importJson(exportedJson);
+      expect(size).to.equal(2);
+      expect(cache.size()).to.equal(2);
+    });
+  });
+
   describe('Cache()', function() {
     it('should return a new cache instance when called', function() {
       var cache1 = new Cache(),

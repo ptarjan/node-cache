@@ -97,6 +97,18 @@ which should print
 
 * Returns all the cache keys
 
+### exportJson = function()
+
+* Returns a JSON string representing all the cache data
+* Any timeoutCallbacks will be ignored
+
+### importJson = function(string)
+
+* Merges all the data from a previous call to `export` into the cache
+* Any existing entries before an `import` will remain in the cache (or be overwritten)
+* Any entries that would have expired since being exported will expire upon being imported (but their callbacks will not be invoked)
+* Returns the new size of the cache
+
 ### Cache = function()
 
 * Cache constructor
