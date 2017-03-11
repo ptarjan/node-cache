@@ -32,9 +32,10 @@ setTimeout(function() {
 // create new cache instance
 var newCache = new cache.Cache();
 
-newCache.put('foo', 'baz');
+newCache.put('foo', 'newbaz');
 
 setTimeout(function() {
+  console.log('foo in old cache is ' + cache.get('foo'));
   console.log('foo in new cache is ' + newCache.get('foo'));
 }, 200);
 ```
@@ -45,7 +46,8 @@ which should print
     Houdini will now disappear
     houdini did disappear
     Houdini is null
-    foo in new cache is baz
+    foo in old cache is baz
+    foo in new cache is newbaz
 
 ## API
 
@@ -98,6 +100,8 @@ which should print
 ### Cache = function()
 
 * Cache constructor
+* note that `require('cache')` would return the default instance of Cache
+* while `require('cache').Cache` is the actual class
 
 ## Note on Patches/Pull Requests
 
