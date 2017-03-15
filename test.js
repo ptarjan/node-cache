@@ -762,6 +762,34 @@ describe('node-cache', function() {
       }));
     });
 
+    it('should import records into an already-existing cache and skip duplicates', function() {
+      cache.debug(true);
+
+      cache.put('key1', 'value1');
+      cache.put('key2', 'value2', 1000);
+      var exportedJson = cache.exportJson();
+
+      cache.put('key1', 'changed value', 5000);
+      cache.put('key3', 'value3', 500);
+
+      cache.importJson(exportedJson, { skipDuplicates: true });
+
+      expect(cache.exportJson()).to.equal(JSON.stringify({
+        key1: {
+          value: 'changed value',
+          expire: START_TIME + 5000,
+        },
+        key2: {
+          value: 'value2',
+          expire: START_TIME + 1000,
+        },
+        key3: {
+          value: 'value3',
+          expire: START_TIME + 500,
+        },
+      }));
+    });
+
     it('should import with updated expire times', function() {
       cache.put('key1', 'value1', 500);
       cache.put('key2', 'value2', 1000);
