@@ -164,17 +164,21 @@ function Cache () {
 
         var record = cacheToImport[key];
 
-        // This could possibly be `'NaN'` if there's no expiry set.
+        // record.expire could be `'NaN'` if no expiry was set.
+        // Try to subtract from it; a string minus a number is `NaN`, which is perfectly fine here.
         var remainingTime = record.expire - currTime;
 
         if (remainingTime <= 0) {
-          // Delete any record that might exist with the same key.
+          // Delete any record that might exist with the same key, since this key is expired.
           this.del(key);
           continue;
         }
 
-        // Remaining time is either positive, or `'NaN'`.
-        this.put(key, record.value, remainingTime > 0 ? remainingTime : undefined);
+        // Remaining time must now be either positive or `NaN`,
+        // but `put` will throw an error if we try to give it `NaN`.
+        remainingTime = remainingTime > 0 ? remainingTime : undefined;
+
+        this.put(key, record.value, remainingTime);
       }
     }
 
