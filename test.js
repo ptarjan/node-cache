@@ -769,6 +769,7 @@ describe('node-cache', function() {
       cache.put('key2', 'value2', 1000);
       var exportedJson = cache.exportJson();
 
+      cache.clear();
       cache.put('key1', 'changed value', 5000);
       cache.put('key3', 'value3', 500);
 
@@ -779,13 +780,13 @@ describe('node-cache', function() {
           value: 'changed value',
           expire: START_TIME + 5000,
         },
-        key2: {
-          value: 'value2',
-          expire: START_TIME + 1000,
-        },
         key3: {
           value: 'value3',
           expire: START_TIME + 500,
+        },
+        key2: {
+          value: 'value2',
+          expire: START_TIME + 1000,
         },
       }));
     });
