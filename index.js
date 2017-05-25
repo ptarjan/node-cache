@@ -29,13 +29,34 @@ exports.put = function(key, value, time, timeoutCallback) {
     expire: time + Date.now()
   };
 
-  if (!isNaN(record.expire)) {
-    record.timeout = setTimeout(function() {
-      _del(key);
-      if (timeoutCallback) {
-        timeoutCallback(key, value);
+
+  const extendedTimeout = (expiresMs) => {
+    // Max time that setTimeOut can handle (in milliseconds)
+    const maxTimeoutMs = 2147483647;
+    // If the time passed in to extendedTimeout is too large for setTimeout, the
+    // maxTimeoutMs has to be used instead.
+    const timeoutMs = (expiresMs > maxTimeoutMs) ? maxTimeoutMs : expiresMs;
+
+
+    record.timeout = setTimeout(() => {
+      // Calculates how much time is left till the cached data expires
+      const timeLeft = expiresMs - timeoutMs;
+
+      // When timeLeft is <= 0, then the cached data has expired
+      if (timeLeft <= 0) {
+        _del(key);
+        if (timeoutCallback) {
+          timeoutCallback(key, value);
+        }
+      } else {
+        extendedTimeout(timeLeft);
       }
-    }, time);
+    }, timeoutMs);
+  };
+  
+
+  if (!isNaN(record.expire)) {
+    extendedTimeout(time);
   }
 
   cache[key] = record;
