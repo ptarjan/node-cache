@@ -30,7 +30,7 @@ exports.put = function(key, value, time, timeoutCallback) {
   };
 
 
-  var extendedTimeout = (expiresMs) => {
+  var extendedTimeout = function(expiresMs) {
     // Max time that setTimeOut can handle (in milliseconds)
     var maxTimeoutMs = 2147483647;
     // If the time passed in to extendedTimeout is too large for setTimeout, the
@@ -38,7 +38,7 @@ exports.put = function(key, value, time, timeoutCallback) {
     var timeoutMs = (expiresMs > maxTimeoutMs) ? maxTimeoutMs : expiresMs;
 
 
-    record.timeout = setTimeout(() => {
+    record.timeout = setTimeout(function() {
       // Calculates how much time is left till the cached data expires
       var timeLeft = expiresMs - timeoutMs;
 
