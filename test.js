@@ -86,8 +86,8 @@ describe('node-cache', function() {
 
     it('should cause the timeout callback to fire once 30 days later', function() {
       var spy = sinon.spy();
-      const thirtyDays = 2592000000;
-      const timeoutMax = 2147483648;
+      var thirtyDays = 2592000000;
+      var timeoutMax = 2147483648;
       cache.put('key', 'value', thirtyDays, spy);
       clock.tick(timeoutMax);
       expect(spy).to.not.have.been.called;
