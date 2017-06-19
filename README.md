@@ -27,6 +27,17 @@ console.log('Houdini will now ' + cache.get('houdini'));
 setTimeout(function() {
     console.log('Houdini is ' + cache.get('houdini'));
 }, 200);
+
+
+// create new cache instance
+var newCache = new cache.Cache();
+
+newCache.put('foo', 'newbaz');
+
+setTimeout(function() {
+  console.log('foo in old cache is ' + cache.get('foo'));
+  console.log('foo in new cache is ' + newCache.get('foo'));
+}, 200);
 ```
 
 which should print
@@ -35,6 +46,8 @@ which should print
     Houdini will now disappear
     houdini did disappear
     Houdini is null
+    foo in old cache is baz
+    foo in new cache is newbaz
 
 ## API
 
@@ -84,6 +97,11 @@ which should print
 
 * Returns all the cache keys
 
+### Cache = function()
+
+* Cache constructor
+* note that `require('cache')` would return the default instance of Cache
+* while `require('cache').Cache` is the actual class
 
 ## Note on Patches/Pull Requests
 

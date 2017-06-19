@@ -5,7 +5,8 @@ var chai = require('chai'),
     expect = chai.expect,
     sinon = require('sinon'),
     sinonChai = require('sinon-chai'),
-    cache = require('./index'),
+    Cache = require('./index').Cache,
+    cache = new Cache(),
     clock;
 
 chai.use(sinonChai);
@@ -99,7 +100,7 @@ describe('node-cache', function() {
       var spy = sinon.spy();
       cache.put('key', 'value', 1000, spy);
       clock.tick(999);
-      cache.put('key', 'value')
+      cache.put('key', 'value');
       clock.tick(1);
       expect(spy).to.not.have.been.called;
     });
@@ -196,7 +197,7 @@ describe('node-cache', function() {
       clock.tick(1000);
       expect(spy).to.not.have.been.called;
     });
-    
+
     it('should handle deletion of many items', function(done) {
       clock.restore();
       var num = 1000;
@@ -635,4 +636,18 @@ describe('node-cache', function() {
       expect(cache.keys()).to.deep.equal([]);
     });
   });
+
+  describe('Cache()', function() {
+    it('should return a new cache instance when called', function() {
+      var cache1 = new Cache(),
+        cache2 = new Cache();
+      cache1.put('key', 'value1');
+      expect(cache1.keys()).to.deep.equal(['key']);
+      expect(cache2.keys()).to.deep.equal([]);
+      cache2.put('key', 'value2');
+      expect(cache1.get('key')).to.equal('value1');
+      expect(cache2.get('key')).to.equal('value2');
+    });
+  });
+
 });
