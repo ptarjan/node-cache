@@ -12,8 +12,8 @@ function Cache () {
       console.log('caching: %s = %j (@%s)', key, value, time);
     }
 
-    if (typeof time !== 'undefined' && (typeof time !== 'number' || isNaN(time) || time <= 0)) {
-      throw new Error('Cache timeout must be a positive number');
+    if (typeof time !== 'undefined' && (typeof time !== 'number' || isNaN(time) || time <= 0 || time >= Math.pow(2, 32) / 2)) {
+      throw new Error('Cache timeout must be a positive number that is less than 2^32');
     } else if (typeof timeoutCallback !== 'undefined' && typeof timeoutCallback !== 'function') {
       throw new Error('Cache timeout callback must be a function');
     }
