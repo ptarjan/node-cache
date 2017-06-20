@@ -97,6 +97,21 @@ which should print
 
 * Returns all the cache keys
 
+### exportJson = function()
+
+* Returns a JSON string representing all the cache data
+* Any timeoutCallbacks will be ignored
+
+### importJson = function(json: string, options: { skipDuplicates: boolean })
+
+* Merges all the data from a previous call to `export` into the cache
+* Any existing entries before an `import` will remain in the cache
+* Any duplicate keys will be overwritten, unless `skipDuplicates` is `true`
+* Any entries that would have expired since being exported will expire upon being imported (but their callbacks will not be invoked)
+* Available `options`:
+  * `skipDuplicates`: If `true`, any duplicate keys will be ignored when importing them. Defaults to `false`.
+* Returns the new size of the cache
+
 ### Cache = function()
 
 * Cache constructor

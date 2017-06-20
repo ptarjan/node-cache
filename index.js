@@ -127,6 +127,63 @@ function Cache () {
   this.keys = function() {
     return Object.keys(_cache);
   };
+
+  this.exportJson = function() {
+    var plainJsCache = {};
+
+    // Discard the `timeout` property.
+    // Note: JSON doesn't support `NaN`, so convert it to `'NaN'`.
+    for (var key in _cache) {
+      var record = _cache[key];
+      plainJsCache[key] = {
+        value: record.value,
+        expire: record.expire || 'NaN',
+      };
+    }
+
+    return JSON.stringify(plainJsCache);
+  };
+
+  this.importJson = function(jsonToImport, options) {
+    var cacheToImport = JSON.parse(jsonToImport);
+    var currTime = Date.now();
+
+    var skipDuplicates = options && options.skipDuplicates;
+
+    for (var key in cacheToImport) {
+      if (cacheToImport.hasOwnProperty(key)) {
+        if (skipDuplicates) {
+          var existingRecord = _cache[key];
+          if (existingRecord) {
+            if (_debug) {
+              console.log('Skipping duplicate imported key \'%s\'', key);
+            }
+            continue;
+          }
+        }
+
+        var record = cacheToImport[key];
+
+        // record.expire could be `'NaN'` if no expiry was set.
+        // Try to subtract from it; a string minus a number is `NaN`, which is perfectly fine here.
+        var remainingTime = record.expire - currTime;
+
+        if (remainingTime <= 0) {
+          // Delete any record that might exist with the same key, since this key is expired.
+          this.del(key);
+          continue;
+        }
+
+        // Remaining time must now be either positive or `NaN`,
+        // but `put` will throw an error if we try to give it `NaN`.
+        remainingTime = remainingTime > 0 ? remainingTime : undefined;
+
+        this.put(key, record.value, remainingTime);
+      }
+    }
+
+    return this.size();
+  };
 }
 
 module.exports = new Cache();
