@@ -30,13 +30,32 @@ function Cache () {
       expire: time + Date.now()
     };
 
-    if (!isNaN(record.expire)) {
+    var extendedTimeout = function(expiresMs) {
+      // Max time that setTimeOut can handle (in milliseconds)
+      var maxTimeoutMs = 2147483647;
+      // If the time passed in to extendedTimeout is too large for setTimeout, the
+      // maxTimeoutMs has to be used instead.
+      var timeoutMs = (expiresMs > maxTimeoutMs) ? maxTimeoutMs : expiresMs;
+
+
       record.timeout = setTimeout(function() {
-        _del(key);
-        if (timeoutCallback) {
-          timeoutCallback(key, value);
+        // Calculates how much time is left till the cached data expires
+        var timeLeft = expiresMs - timeoutMs;
+
+        // When timeLeft is <= 0, then the cached data has expired
+        if (timeLeft <= 0) {
+          _del(key);
+          if (timeoutCallback) {
+            timeoutCallback(key, value);
+          }
+        } else {
+          extendedTimeout(timeLeft);
         }
-      }.bind(this), time);
+      }.bind(this), timeoutMs);
+    };
+
+    if (!isNaN(record.expire)) {
+      extendedTimeout(time);
     }
 
     _cache[key] = record;

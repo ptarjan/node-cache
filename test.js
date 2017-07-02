@@ -85,6 +85,17 @@ describe('node-cache', function() {
       expect(spy).to.have.been.calledOnce.and.calledWith('key', 'value');
     });
 
+    it('should cause the timeout callback to fire once 30 days later', function() {
+      var spy = sinon.spy();
+      var thirtyDays = 2592000000;
+      var timeoutMax = 2147483648;
+      cache.put('key', 'value', thirtyDays, spy);
+      clock.tick(timeoutMax);
+      expect(spy).to.not.have.been.called;
+      clock.tick(thirtyDays-timeoutMax);
+      expect(spy).to.have.been.calledOnce.and.calledWith('key', 'value')
+    });
+
     it('should override the timeout callback on a new put() with a different timeout callback', function() {
       var spy1 = sinon.spy();
       var spy2 = sinon.spy();
