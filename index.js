@@ -47,6 +47,22 @@ function Cache () {
   this.del = function(key) {
     var canDelete = true;
 
+    if ( key.indexOf('*') >= 0) {
+      var success = true;
+      var keys = Object.keys(_cache);
+      var regex = new RegExp("^" + key.split("*").join(".*") + "$");
+
+      for ( var index in keys ) {
+        if ( keys.hasOwnProperty(index) ) {
+          if ( regex.test(keys[index]) ) {
+            success = success && this.del(keys[index]);
+          }
+        }
+      }
+
+      return success;
+    }
+    
     var oldRecord = _cache[key];
     if (oldRecord) {
       clearTimeout(oldRecord.timeout);
