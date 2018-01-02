@@ -37,6 +37,7 @@ function Cache () {
           timeoutCallback(key, value);
         }
       }.bind(this), time);
+      record.timeout.unref();
     }
 
     _cache[key] = record;
