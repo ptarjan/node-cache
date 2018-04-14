@@ -46,7 +46,7 @@ which should print
     Houdini will now disappear
     houdini did disappear
     Houdini is null
-    foo in old cache is baz
+    foo in old cache is bar
     foo in new cache is newbaz
 
 ## API
