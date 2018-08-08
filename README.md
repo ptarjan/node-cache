@@ -13,7 +13,7 @@ var cache = require('memory-cache');
 
 // now just use the cache
 
-cache.put('foo', 'bar');
+cache.put('foo', 'baz');
 console.log(cache.get('foo'));
 
 // that wasn't too interesting, here's the good part
