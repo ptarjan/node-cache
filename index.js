@@ -1,7 +1,120 @@
 'use strict';
 
+function HashMap() {
+  var _map = [];
+  var _keys = [];
+
+  this.put = function(key, value) {
+    var hashCode = _hash(key);
+
+    // get the bucket that the hashcode points to
+    // or create a new one
+    var bucket = _map[hashCode]
+
+    if(bucket) {
+      // If the key was already added then we will just update the value.
+      var exists = false;
+      for(var i = 0; i < bucket.length; i ++) {
+        if(bucket[i][0] === key) {
+          exists = true;
+          bucket[i][1] = value;
+          break;
+        }
+      }
+
+      if(!exists) {
+        _keys.push(key);
+        bucket.push([key, value]);
+      }
+    } else {
+      _keys.push(key);
+      _map[hashCode] = [[key, value]];
+    }
+  }
+
+  this.del = function(key) {
+    var hashCode = _hash(key);
+    var bucket = _map[hashCode];
+
+    if(bucket) {
+      if(bucket.length === 1) {
+        _map[hashCode] = null;
+      } else {
+
+        // There was a collision so find which keys match.
+        for(var i = 0; i < bucket.length; i ++) {
+          if(bucket[i][0] === key) {
+            bucket.splice(i, 1);
+            break;
+          }
+        }
+      }
+
+      for(var i = 0; i < _keys.length; i ++) {
+        if(_keys[i] === key) {
+          _keys.splice(i, 1);
+          break;
+        }
+      }
+    }
+  }
+
+  this.get = function(key) {
+    var hashCode = _hash(key);
+    var bucket = _map[hashCode];
+    var value; // return undefined if not found
+
+    if(bucket) {
+      if(bucket.length === 1) {
+        value = bucket[0][1];
+      } else {
+        // There was a collision so find which keys match.
+        bucket.some(function(tuple){
+          if(tuple[0] === key) {
+            value = tuple[1];
+            return true;
+          }
+
+          return false;
+        });
+      }
+    }
+
+    return value;
+  }
+
+  this.size = function() {
+    var size = 0;
+
+    _map.forEach(function(bucket){
+      if(bucket) {
+        size += bucket.length;
+      }
+    });
+
+    return size;
+  }
+
+  this.getKeys = function(){
+    return _keys;
+  }
+
+  function _hash(key) {
+    var str = String(key);
+    var hash = 0;
+
+    for (var i = 0; i < str.length; i++) {
+        var char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0;
+    }
+
+    return hash;
+  }
+}
+
 function Cache () {
-  var _cache = Object.create(null);
+  var _cache = new HashMap();
   var _hitCount = 0;
   var _missCount = 0;
   var _size = 0;
@@ -18,7 +131,7 @@ function Cache () {
       throw new Error('Cache timeout callback must be a function');
     }
 
-    var oldRecord = _cache[key];
+    var oldRecord = _cache.get(key);
     if (oldRecord) {
       clearTimeout(oldRecord.timeout);
     } else {
@@ -39,7 +152,7 @@ function Cache () {
       }.bind(this), time);
     }
 
-    _cache[key] = record;
+    _cache.put(key,record);
 
     return value;
   };
@@ -47,7 +160,7 @@ function Cache () {
   this.del = function(key) {
     var canDelete = true;
 
-    var oldRecord = _cache[key];
+    var oldRecord = _cache.get(key);
     if (oldRecord) {
       clearTimeout(oldRecord.timeout);
       if (!isNaN(oldRecord.expire) && oldRecord.expire < Date.now()) {
@@ -66,15 +179,15 @@ function Cache () {
 
   function _del(key){
     _size--;
-    delete _cache[key];
+    _cache.del(key);
   }
 
   this.clear = function() {
-    for (var key in _cache) {
-      clearTimeout(_cache[key].timeout);
-    }
+    _cache.getKeys().forEach(function(key) {
+      clearTimeout(_cache.get(key).timeout);
+    });
     _size = 0;
-    _cache = Object.create(null);
+    _cache = new HashMap();
     if (_debug) {
       _hitCount = 0;
       _missCount = 0;
@@ -82,7 +195,7 @@ function Cache () {
   };
 
   this.get = function(key) {
-    var data = _cache[key];
+    var data = _cache.get(key);
     if (typeof data != "undefined") {
       if (isNaN(data.expire) || data.expire >= Date.now()) {
         if (_debug) _hitCount++;
@@ -90,8 +203,7 @@ function Cache () {
       } else {
         // free some space
         if (_debug) _missCount++;
-        _size--;
-        delete _cache[key];
+        del(key);
       }
     } else if (_debug) {
       _missCount++;
@@ -104,12 +216,7 @@ function Cache () {
   };
 
   this.memsize = function() {
-    var size = 0,
-      key;
-    for (key in _cache) {
-      size++;
-    }
-    return size;
+    return _cache.size();
   };
 
   this.debug = function(bool) {
@@ -125,7 +232,7 @@ function Cache () {
   };
 
   this.keys = function() {
-    return Object.keys(_cache);
+    return _cache.getKeys();
   };
 
   this.exportJson = function() {
@@ -133,13 +240,13 @@ function Cache () {
 
     // Discard the `timeout` property.
     // Note: JSON doesn't support `NaN`, so convert it to `'NaN'`.
-    for (var key in _cache) {
-      var record = _cache[key];
+    _cache.getKeys().forEach(function(key) {
+      var record = _cache.get(key);
       plainJsCache[key] = {
         value: record.value,
         expire: record.expire || 'NaN',
       };
-    }
+    });
 
     return JSON.stringify(plainJsCache);
   };
@@ -153,7 +260,7 @@ function Cache () {
     for (var key in cacheToImport) {
       if (cacheToImport.hasOwnProperty(key)) {
         if (skipDuplicates) {
-          var existingRecord = _cache[key];
+          var existingRecord = _cache.get(key);
           if (existingRecord) {
             if (_debug) {
               console.log('Skipping duplicate imported key \'%s\'', key);
