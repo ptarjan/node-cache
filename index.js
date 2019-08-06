@@ -6,6 +6,7 @@ function Cache () {
   var _missCount = 0;
   var _size = 0;
   var _debug = false;
+  var _countStats = false;
 
   this.put = function(key, value, time, timeoutCallback) {
     if (_debug) {
@@ -75,7 +76,7 @@ function Cache () {
     }
     _size = 0;
     _cache = Object.create(null);
-    if (_debug) {
+    if (_countStats) {
       _hitCount = 0;
       _missCount = 0;
     }
@@ -85,15 +86,15 @@ function Cache () {
     var data = _cache[key];
     if (typeof data != "undefined") {
       if (isNaN(data.expire) || data.expire >= Date.now()) {
-        if (_debug) _hitCount++;
+        if (_countStats) _hitCount++;
         return data.value;
       } else {
         // free some space
-        if (_debug) _missCount++;
+        if (_countStats) _missCount++;
         _size--;
         delete _cache[key];
       }
-    } else if (_debug) {
+    } else if (_countStats) {
       _missCount++;
     }
     return null;
@@ -114,6 +115,10 @@ function Cache () {
 
   this.debug = function(bool) {
     _debug = bool;
+  };
+  
+  this.countStats = function(bool) {
+    _countStats = bool;
   };
 
   this.hits = function() {
