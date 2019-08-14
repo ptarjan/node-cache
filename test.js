@@ -70,6 +70,12 @@ describe('node-cache', function() {
       }).to.throw();
     });
 
+    it('should throw an error given a timeout that is too large', function() {
+      expect(function() {
+        cache.put('key', 'value', 2147483648);
+      }).to.throw();
+    });
+
     it('should throw an error given a non-function timeout callback', function() {
       expect(function() {
         cache.put('key', 'value', 100, 'foo');
