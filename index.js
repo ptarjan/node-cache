@@ -6,6 +6,7 @@ function Cache () {
   var _missCount = 0;
   var _size = 0;
   var _debug = false;
+  var MAX_TIMEOUT = 2147483647;
 
   this.put = function(key, value, time, timeoutCallback) {
     if (_debug) {
@@ -16,6 +17,8 @@ function Cache () {
       throw new Error('Cache timeout must be a positive number');
     } else if (typeof timeoutCallback !== 'undefined' && typeof timeoutCallback !== 'function') {
       throw new Error('Cache timeout callback must be a function');
+    } else if (time > MAX_TIMEOUT) {
+      throw new Error('Cache timeout out of range');
     }
 
     var oldRecord = _cache[key];
