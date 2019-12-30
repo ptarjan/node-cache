@@ -10,6 +10,10 @@
     {
       "name": "Jacob Wenger",
       "email": "wenger.jacob@gmail.com"
+    },
+    {
+      "name": "Laukik Ragji",
+      "email": "Laukik.Ragji@gmail.com"
     }
   ],
   "keywords": [
@@ -19,7 +23,7 @@
     "storage"
   ],
   "main": "./index.js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/ptarjan/node-cache.git"
