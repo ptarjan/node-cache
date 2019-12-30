@@ -28,6 +28,7 @@
     "type": "git",
     "url": "git://github.com/ptarjan/node-cache.git"
   },
+  "engines" : { "node" : ">=6.17.1" },
   "scripts": {
     "test": "./node_modules/.bin/gulp test"
   },
