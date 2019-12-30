@@ -1,13 +1,13 @@
 'use strict';
 
-function Cache () {
+function Cache() {
   var _cache = Object.create(null);
   var _hitCount = 0;
   var _missCount = 0;
   var _size = 0;
   var _debug = false;
 
-  this.put = function(key, value, time, timeoutCallback) {
+  this.put = function (key, value, time, timeoutCallback) {
     if (_debug) {
       console.log('caching: %s = %j (@%s)', key, value, time);
     }
@@ -31,7 +31,7 @@ function Cache () {
     };
 
     if (!isNaN(record.expire)) {
-      record.timeout = setTimeout(function() {
+      record.timeout = setTimeout(function () {
         _del(key);
         if (timeoutCallback) {
           timeoutCallback(key, value);
@@ -44,7 +44,7 @@ function Cache () {
     return value;
   };
 
-  this.del = function(key) {
+  this.del = function (key) {
     var canDelete = true;
 
     var oldRecord = _cache[key];
@@ -64,12 +64,12 @@ function Cache () {
     return canDelete;
   };
 
-  function _del(key){
+  function _del(key) {
     _size--;
     delete _cache[key];
   }
 
-  this.clear = function() {
+  this.clear = function () {
     for (var key in _cache) {
       clearTimeout(_cache[key].timeout);
     }
@@ -81,7 +81,7 @@ function Cache () {
     }
   };
 
-  this.get = function(key) {
+  this.get = function (key) {
     var data = _cache[key];
     if (typeof data != "undefined") {
       if (isNaN(data.expire) || data.expire >= Date.now()) {
@@ -99,11 +99,11 @@ function Cache () {
     return null;
   };
 
-  this.size = function() {
+  this.size = function () {
     return _size;
   };
 
-  this.memsize = function() {
+  this.memsize = function () {
     var size = 0,
       key;
     for (key in _cache) {
@@ -112,23 +112,23 @@ function Cache () {
     return size;
   };
 
-  this.debug = function(bool) {
+  this.debug = function (bool) {
     _debug = bool;
   };
 
-  this.hits = function() {
+  this.hits = function () {
     return _hitCount;
   };
 
-  this.misses = function() {
+  this.misses = function () {
     return _missCount;
   };
 
-  this.keys = function() {
+  this.keys = function () {
     return Object.keys(_cache);
   };
 
-  this.exportJson = function() {
+  this.exportJson = function () {
     var plainJsCache = {};
 
     // Discard the `timeout` property.
@@ -144,7 +144,7 @@ function Cache () {
     return JSON.stringify(plainJsCache);
   };
 
-  this.importJson = function(jsonToImport, options) {
+  this.importJson = function (jsonToImport, options) {
     var cacheToImport = JSON.parse(jsonToImport);
     var currTime = Date.now();
 
@@ -188,3 +188,4 @@ function Cache () {
 
 module.exports = new Cache();
 module.exports.Cache = Cache;
+module.exports.HitCache = require('./hit-cache/hit-cache');

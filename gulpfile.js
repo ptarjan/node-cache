@@ -17,11 +17,13 @@ var istanbul = require('gulp-istanbul');
 /****************/
 var paths = {
   js: [
-    'index.js'
+    'index.js',
+    './hit-cache/hit-cache.js'
   ],
 
   tests: [
-    'test.js'
+    'test.js',
+    './hit-cache/hit-cache.specs.js'
   ]
 };
 
