@@ -1,23 +1,22 @@
-const expect = require('chai').expect;
-//const sinon = require('sinon');
-const hitsBasedCache = require('./hit-cache');
+var expect = require('chai').expect;
+var hitsBasedCache = require('./hit-cache');
 
 function generateMock() {
-    const mockCache = {};
-    mockCache.put = (key, value, lifespan, timeoutCallback) => {
+    var mockCache = {};
+    mockCache.put = function (key, value, lifespan, timeoutCallback) {
         mockCache.key = key;
         mockCache.value = value;
         mockCache.lifespan = lifespan;
         mockCache.timeoutCallback = timeoutCallback
     };
-    mockCache.get = (key) => mockCache.value;
+    mockCache.get = function (key) { return mockCache.value };
     return mockCache;
 }
 
-describe('Hits based cache', () => {
-    it('should set correct values when set is called', () => {
+describe('Hits based cache', function () {
+    it('should set correct values when set is called', function () {
         //Mock
-        let mock = generateMock();
+        var mock = generateMock();
         //Setup
         const UUT = new hitsBasedCache(mock);
         const key = 'Hello';
@@ -31,9 +30,9 @@ describe('Hits based cache', () => {
         expect(mock.value.value).to.equals(value);
     });
 
-    it('should get correct value after set is called', () => {
+    it('should get correct value after set is called', function () {
         //Mock
-        let mock = generateMock();
+        var mock = generateMock();
         //Setup
         const UUT = new hitsBasedCache(mock);
         const key = 'Hello';
@@ -41,14 +40,14 @@ describe('Hits based cache', () => {
         const lifespanInMillis = 5000;
 
         UUT.set(key, value, lifespanInMillis);
-        let cachedvalue = UUT.get(key);
+        var cachedvalue = UUT.get(key);
         //Validate
         expect(cachedvalue).to.equals(value);
     });
 
-    it('should get Undefined after lifespan is over.', () => {
+    it('should get Undefined after lifespan is over.', function () {
         //Mock
-        let mock = generateMock();
+        var mock = generateMock();
         //Setup
         const UUT = new hitsBasedCache(mock);
         const key = 'Hello';
@@ -56,21 +55,21 @@ describe('Hits based cache', () => {
         const lifespanInMillis = 5000;
 
         UUT.set(key, value, lifespanInMillis);
-        let tempKey = mock.key;
-        let tempValue = mock.value;
+        var tempKey = mock.key;
+        var tempValue = mock.value;
         delete mock.key;
         delete mock.value;
         delete mock.lifespan;
         mock.timeoutCallback(tempKey, tempValue);//Simulate timeout
 
         //Validate
-        let actual = UUT.get(key);
+        var actual = UUT.get(key);
         expect(undefined).to.equals(actual);
     });
 
-    it('should increment the lifecount by one when get is called.', () => {
+    it('should increment the lifecount by one when get is called.', function () {
         //Mock
-        let mock = generateMock();
+        var mock = generateMock();
         //Setup
         const UUT = new hitsBasedCache(mock);
         const key = 'Hello';
@@ -78,7 +77,7 @@ describe('Hits based cache', () => {
         const lifespanInMillis = 5000;
 
         UUT.set(key, value, lifespanInMillis);
-        let actual = UUT.get(key);
+        var actual = UUT.get(key);
 
         //Validate
         expect(value).to.equals(actual);
@@ -86,9 +85,9 @@ describe('Hits based cache', () => {
         expect(mock.lifespan).to.equals(lifespanInMillis);
     });
 
-    it('should decrement the lifecount by one when lifespan is ellapsed.', () => {
+    it('should decrement the lifecount by one when lifespan is ellapsed.', function () {
         //Mock
-        let mock = generateMock();
+        var mock = generateMock();
         //Setup
         const UUT = new hitsBasedCache(mock);
         const key = 'Hello';
@@ -96,7 +95,7 @@ describe('Hits based cache', () => {
         const lifespanInMillis = 5000;
 
         UUT.set(key, value, lifespanInMillis);
-        let actual = UUT.get(key);
+        var actual = UUT.get(key);
 
         //Validate
         expect(value).to.equals(actual);

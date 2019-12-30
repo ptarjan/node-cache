@@ -1,12 +1,12 @@
 module.exports = function HitCache(cache) {
 
     this.set = function (key, value, lifeSpan) {
-        let valueWrapper = { "remainingLife": 0, "value": value, "lifespan": lifeSpan };
+        var valueWrapper = { "remainingLife": 0, "value": value, "lifespan": lifeSpan };
         cache.put(key, valueWrapper, lifeSpan, this._reIncarnation);
     };
 
     this.get = function (key) {
-        let value = cache.get(key);
+        var value = cache.get(key);
         if (value != undefined) {
             value.remainingLife++;//This is by ref updated in value.
             value = value.value;
