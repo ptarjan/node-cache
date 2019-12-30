@@ -7,14 +7,14 @@ module.exports = class HitCache {
         this.get = this.get.bind(this);
     }
 
-    set(key, value, oneLifeSpan) {
-        let valueWrapper = { "remainingLife": 0, "value": value, "lifespan": oneLifeSpan };
-        this._cache.put(key, valueWrapper, oneLifeSpan, this._reIncarnation);
+    set(key, value, lifeSpan) {
+        let valueWrapper = { "remainingLife": 0, "value": value, "lifespan": lifeSpan };
+        this._cache.put(key, valueWrapper, lifeSpan, this._reIncarnation);
     }
 
     get(key) {
         let value = this._cache.get(key);
-        if (value !== undefined) {
+        if (value != undefined) {
             value.remainingLife++;//This is by ref updated in value.
             value = value.value;
         }
