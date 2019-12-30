@@ -1,30 +1,23 @@
-module.exports = class HitCache {
-    constructor(cache) {
-        this._cache = cache;
+module.exports = function HitCache(cache) {
 
-        this._reIncarnation = this._reIncarnation.bind(this);
-        this.set = this.set.bind(this);
-        this.get = this.get.bind(this);
-    }
-
-    set(key, value, lifeSpan) {
+    this.set = function (key, value, lifeSpan) {
         let valueWrapper = { "remainingLife": 0, "value": value, "lifespan": lifeSpan };
-        this._cache.put(key, valueWrapper, lifeSpan, this._reIncarnation);
-    }
+        cache.put(key, valueWrapper, lifeSpan, this._reIncarnation);
+    };
 
-    get(key) {
-        let value = this._cache.get(key);
+    this.get = function (key) {
+        let value = cache.get(key);
         if (value != undefined) {
             value.remainingLife++;//This is by ref updated in value.
             value = value.value;
         }
         return value;
-    }
+    };
 
-    _reIncarnation(key, value) {
+    this._reIncarnation = function (key, value) {
         if (value.remainingLife > 0) {
             value.remainingLife--;
-            this._cache.put(key, value, value.lifespan, this._reIncarnation);
+            cache.put(key, value, value.lifespan, this._reIncarnation);
         }
-    }
+    };
 }
