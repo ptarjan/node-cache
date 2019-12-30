@@ -149,16 +149,16 @@ setTimeout(() => {
 
 ## API
 ### Constructor `constructor(cache)`
-Parameter `cache`: Instance of the cache which should hold values. Eg:`require('cache').Cache` or `require('cache')`
+* Parameter `cache`: Instance of the cache which should hold values. Eg:`require('cache').Cache` or `require('cache')`
 
 ### set `set(key, value, lifeSpan)`
-Parameter `key` : Key for the cached value.
-Parameter `value` : Content to be cached.
-Parameter `lifeSpan` : Default expiry time for the content, after which it will be evicted from cache unless it has hits.
+* Parameter `key` : Key for the cached value.
+* Parameter `value` : Content to be cached.
+* Parameter `lifeSpan` : Default expiry time for the content, after which it will be evicted from cache unless it has hits.
 
 ### get `get(key)`
-Parameter `key` : Key for the cached value.
-Returns `null` if the key is not found, else returns content and increases its lifespan by lifespan parameter defined at the time of set.
+* Parameter `key` : Key for the cached value.
+* Returns `null` if the key is not found, else returns content and increases its lifespan by lifespan parameter defined at the time of set.
 
 ## Note on Patches/Pull Requests
 
