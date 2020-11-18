@@ -35,6 +35,10 @@ function Cache () {
       record.timeout = setTimeout(function() {
         if (_deleteOnTimeout) {
           _del(key);
+        } else {
+          var record = _cache[key];
+          delete record.expire;
+          delete record.timeout;
         }
         if (timeoutCallback) {
           timeoutCallback(key, value);
