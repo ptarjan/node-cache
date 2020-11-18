@@ -97,6 +97,11 @@ which should print
 
 * Returns all the cache keys
 
+### deleteOnTimeout = function(bool)
+
+* Turns on or off automatic delete on TTL expiration
+* Defaults to on
+
 ### exportJson = function()
 
 * Returns a JSON string representing all the cache data
