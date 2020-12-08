@@ -6,6 +6,7 @@ function Cache () {
   var _missCount = 0;
   var _size = 0;
   var _debug = false;
+  var _deleteOnTimeout = true;
 
   this.put = function(key, value, time, timeoutCallback) {
     if (_debug) {
@@ -32,7 +33,13 @@ function Cache () {
 
     if (!isNaN(record.expire)) {
       record.timeout = setTimeout(function() {
-        _del(key);
+        if (_deleteOnTimeout) {
+          _del(key);
+        } else {
+          var record = _cache[key];
+          delete record.expire;
+          delete record.timeout;
+        }
         if (timeoutCallback) {
           timeoutCallback(key, value);
         }
@@ -127,6 +134,10 @@ function Cache () {
   this.keys = function() {
     return Object.keys(_cache);
   };
+
+  this.deleteOnTimeout = function(bool) {
+    _deleteOnTimeout = bool;
+  }
 
   this.exportJson = function() {
     var plainJsCache = {};
