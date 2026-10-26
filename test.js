@@ -190,6 +190,14 @@ describe('node-cache', function() {
       expect(cache.del('key')).to.be.false;
     });
 
+    it('should remove a key that has expired but whose timeout has not fired yet', function() {
+      cache.put('key', 'value', 1000);
+      clock.now += 1001;
+      expect(cache.del('key')).to.be.false;
+      expect(cache.size()).to.equal(0);
+      expect(cache.keys()).to.deep.equal([]);
+    });
+
     it('should cancel the timeout callback for the deleted key', function() {
       var spy = sinon.spy();
       cache.put('key', 'value', 1000, spy);
