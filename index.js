@@ -53,12 +53,9 @@ function Cache () {
       if (!isNaN(oldRecord.expire) && oldRecord.expire < Date.now()) {
         canDelete = false;
       }
+      _del(key);
     } else {
       canDelete = false;
-    }
-
-    if (canDelete) {
-      _del(key);
     }
 
     return canDelete;
